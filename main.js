@@ -1,5 +1,5 @@
 print("Started ...");
-import complex from "complex";
+import complex from "/complex.js";
 
 let canvas = document.getElementById("Canvas");
 let ctx = canvas.getContext("2d");
