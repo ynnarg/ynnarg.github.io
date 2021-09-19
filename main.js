@@ -7,7 +7,7 @@ class Complex {
     }
 
     mul(c) {
-        return new Complex(this.real*c.real + this.real*c.imag, this.imag*c.real, this.imag*c.imag);
+        return new Complex(this.real*c.real + this.real*c.imag, this.imag*c.real + this.imag*c.imag);
     }
 }
 
