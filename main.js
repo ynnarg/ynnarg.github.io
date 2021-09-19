@@ -50,8 +50,6 @@ for( let x = lX; x <= rX; x += iX ) {
             i += 1;
         }
         i = (i % colors.length);
-        if (lower < 0) {lower = colors.length - 1;}
-        if (higher >= colors.length) {higher = 0;}
 
         let col = colors[i];
         ctx.beginPath();
