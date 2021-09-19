@@ -6,8 +6,6 @@ class Complex {
         this.magnitude = Math.sqrt(real*real + imag*imag);
     }
 
-    get magnitude() {return this.magnitude;}
-
     mul(c) {
         return new Complex(this.real*c.real + this.real*c.imag, this.imag*c.real, this.imag*c.imag);
     }
