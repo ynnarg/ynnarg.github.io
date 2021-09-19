@@ -9,6 +9,10 @@ class Complex {
     mul(c) {
         return new Complex(this.real*c.real + this.real*c.imag, this.imag*c.real + this.imag*c.imag);
     }
+    
+    add(c) {
+        return new Complex(this.real+c.real, this.imag+c.imag);
+    }
 }
 
 let canvas = document.getElementById("Canvas");
@@ -45,8 +49,8 @@ for( let x = lX; x <= rX; x += iX ) {
         let c = new Complex(x, y);
         let z = new Complex(0, 0);
         let i = 0;
-        while( c.magnitude < 2 && i < iters ) {
-            c = c.mul(c);
+        while( z.magnitude < 2 && i < iters ) {
+            z = z.mul(z).add(c);
             i += 1;
             console.log("doe");
         }
