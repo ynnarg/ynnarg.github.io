@@ -49,17 +49,14 @@ for( let x = lX; x <= rX; x += iX ) {
             c = c.mul(c);
             i += 1;
         }
-        i = colors.length / i;
-        let lower = Math.floor(i);
-        let higher = Math.ceil(i);
+        i = (i % colors.length);
         if (lower < 0) {lower = colors.length - 1;}
         if (higher >= colors.length) {higher = 0;}
-        let diff = i - lower;
 
-        let col = [lerp(lower[0], higher[0], diff), lerp(lower[1], higher[1], diff), lerp(lower[2], higher[2], diff)];
+        let col = colors[i];
         console.log(col[0], col[1], col[2])
         ctx.beginPath();
-        ctx.strokeStyle = "rgb(" + toString(col[1]) + ", " + toString(col[2]) + ", " + toString(col[3]) + ")";
+        ctx.strokeStyle = "rgb(" + toString(col[0]) + ", " + toString(col[1]) + ", " + toString(col[2]) + ")";
         ctx.rect((x + dX / 2) / 2 * screenSize.X, (y + dY / 2) / 2 * screenSize.Y , 1, 1);
         ctx.stroke();
     }
