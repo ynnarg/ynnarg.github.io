@@ -56,7 +56,7 @@ for( let x = lX; x <= rX; x += iX ) {
         if (higher >= colors.length) {higher = 0;}
         let diff = i - lower;
 
-        let col = [lerp(lower[1], higher[1], diff), lerp(lower[2], higher[2], diff), lerp(lower[3], higher[3], diff)];
+        let col = [lerp(lower[0], higher[0], diff), lerp(lower[1], higher[1], diff), lerp(lower[2], higher[2], diff)];
         ctx.beginPath();
         ctx.strokeStyle = "rgb(" + toString(col[1]) + ", " + toString(col[2]) + ", " + toString(col[3]) + ")";
         ctx.rect((x + dX / 2) / 2 * screenSize.X, (y + dY / 2) / 2 * screenSize.Y , 1, 1);
