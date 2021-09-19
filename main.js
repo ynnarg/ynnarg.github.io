@@ -57,7 +57,7 @@ for( let x = lX; x <= rX; x += iX ) {
 
         let col = colors[i];
         ctx.beginPath();
-        ctx.strokeStyle = "rgb(" + toString(col[0]) + ", " + toString(col[1]) + ", " + toString(col[2]) + ")";
+        ctx.strokeStyle = "#" + col[0].toString(16) + col[1].toString(16) + col[2].toString(16);
         ctx.rect((x + dX / 2) / 2 * screenSize.X, (y + dY / 2) / 2 * screenSize.Y , 1, 1);
         ctx.stroke();
     }
