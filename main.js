@@ -1,5 +1,15 @@
-print("Started ...");
-import complex from "/complex.js";
+
+class Complex {
+    constructor(real, imag) {
+        this.real = real;
+        this.imag = imag;
+        this.magnitude = Math.sqrt(real*real + imag*imag);
+    }
+
+    mul(c) {
+        return new Complex(this.real*c.real + this.real*c.imag, this.imag*c.real, this.imag*c.imag);
+    }
+}
 
 let canvas = document.getElementById("Canvas");
 let ctx = canvas.getContext("2d");
@@ -21,11 +31,11 @@ let iY = dY / screenSize.Y;
 
 for( let x = lX; x <= rX; x += iX ) {
     for( let y = lY; y <= rY; y += iY ) {
-        let c = new complex(x, y);
-        let z = new complex(0, 0);
+        let c = new Complex(x, y);
+        let z = new Complex(0, 0);
         let i = 0;
         while( c.magnitude < 2 && i < iters ) {
-            c = c.mult(c);
+            c = c.mul(c);
         }
     }
 }
