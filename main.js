@@ -18,10 +18,10 @@ let screenSize = {"X":800, "Y":800};
 
 let iters = 10;
 
-let lX = -1;
-let rX = 1;
-let lY = -1;
-let rY = 1;
+let lX = -2;
+let rX = 2;
+let lY = -2;
+let rY = 2;
 
 let dX = Math.abs(lX - rX);
 let dY = Math.abs(lY - rY);
@@ -48,6 +48,7 @@ for( let x = lX; x <= rX; x += iX ) {
         while( c.magnitude < 2 && i < iters ) {
             c = c.mul(c);
             i += 1;
+            console.log("doe");
         }
         i = (i % colors.length);
 
