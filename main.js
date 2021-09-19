@@ -52,7 +52,6 @@ for( let x = lX; x <= rX; x += iX ) {
         while( z.magnitude < 2 && i < iters ) {
             z = z.mul(z).add(c);
             i += 1;
-            console.log("doe");
         }
         i = (i % colors.length);
 
