@@ -57,6 +57,7 @@ for( let x = lX; x <= rX; x += iX ) {
         let diff = i - lower;
 
         let col = [lerp(lower[0], higher[0], diff), lerp(lower[1], higher[1], diff), lerp(lower[2], higher[2], diff)];
+        print(col[0], col[1], col[2])
         ctx.beginPath();
         ctx.strokeStyle = "rgb(" + toString(col[1]) + ", " + toString(col[2]) + ", " + toString(col[3]) + ")";
         ctx.rect((x + dX / 2) / 2 * screenSize.X, (y + dY / 2) / 2 * screenSize.Y , 1, 1);
