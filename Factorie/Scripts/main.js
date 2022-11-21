@@ -2,7 +2,7 @@ console.log("working");
 
 // Imports
 
-import jsCookie from "./js.cookie.min.mjs";
+import jsCookie from "./Libs/js.cookie.min.mjs";
 
 import { Crafting } from "./Modules/crafting.js"
 import { Products } from "./Modules/products.js"
