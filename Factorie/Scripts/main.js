@@ -2,6 +2,8 @@ console.log("working");
 
 // Imports
 
+import jsCookie from "./js.cookie.min.mjs";
+
 import { Crafting } from "./Modules/crafting.js"
 import { Products } from "./Modules/products.js"
 import { Tech } from "./Modules/tech.js";
@@ -24,12 +26,11 @@ var UI = {
 console.log("still working");
 
 $(document).ready(() => {
+    // Top bar buttons
     for (let topBarButtonKey in UI.topBar.buttons) {
         let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
         let currentAnim = null;
         topBarButton.mouseenter(() => {
-            console.log("entered");
-
             if (currentAnim) currentAnim.stop();
             currentAnim = topBarButton.animate({
                 backgroundColor: "#DDD",
@@ -39,8 +40,6 @@ $(document).ready(() => {
         });
         
         topBarButton.mouseleave(() => {
-            console.log("left");
-
             if (currentAnim) currentAnim.stop();
             topBarButton.animate({
                 backgroundColor: "#222",
@@ -48,5 +47,25 @@ $(document).ready(() => {
                 color: "#FFF"
             }, 300);
         });
+
+        topBarButton.mousedown(() => {
+            if (currentAnim) currentAnim.stop();
+            topBarButton.css({
+                backgroundColor: "#FFF",
+                boxShadowColor: "#111",
+                color: "#000"
+            });
+        })
+
+        topBarButton.mouseup(() => {
+            if (currentAnim) currentAnim.stop();
+            topBarButton.css({
+                backgroundColor: "#DDD",
+                boxShadowColor: "#222",
+                color: "#000"
+            });
+        })
     }
+
+    // Main button
 })

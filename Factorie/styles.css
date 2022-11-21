@@ -16,14 +16,25 @@ body {
     box-shadow: 0px 0px 10px 1px #000;
 }
 
+#topBarInner {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    height: 100%;
+    
+}
+
 .topBar_button {
+    float: left;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
+    position: relative;
+    height: calc(100% - 2px);
     width: 80px;
+    margin-bottom: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
     background-color: #222;
     box-shadow: 0px 0px 3px 1px #555 inset;
     user-select: none;
@@ -32,6 +43,7 @@ body {
     color: #FFF;
 }
 
+/*
 #topBar_mainView {
     left: 12px;
 }
@@ -43,7 +55,7 @@ body {
 #topBar_techView {
     left: 180px;
     width: 90px;
-}
+} */
 
 /* Main View CSS */
 #mainView_wrapper {
