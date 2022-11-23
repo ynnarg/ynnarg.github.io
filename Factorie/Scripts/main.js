@@ -8,7 +8,21 @@ import { Crafting } from "./Modules/crafting.js"
 import { Products } from "./Modules/products.js"
 import { Tech } from "./Modules/tech.js";
 
+// Config
+
+var Config = {
+    Version: "0.0.4"
+}
+
 // Variables
+
+var MainVariables = {
+    currentPhase: 0,
+    money: 0,
+    CurrentBenefits: {
+        SellPriceMul: 1
+    }
+}
 
 var UI = {
     topBar: {
@@ -16,8 +30,26 @@ var UI = {
         buttons: {
             topBar_mainView: document.getElementById("topBar_mainView"),
             topBar_factoryView: document.getElementById("topBar_factoryView"),
-            topBar_techView: document.getElementById("topBar_techView")
+            topBar_techView: document.getElementById("topBar_techView"),
+            topBar_extractorView: document.getElementById("topBar_extractorView"),
+            topBar_statsView: document.getElementById("topBar_statsView")
         }
+    },
+
+    mainView: {
+        mainView: document.getElementById("mainView"),
+        mainButton: document.getElementById("mainButton"),
+        mainProgressBar: document.getElementById("mainProgressBar"),
+    }
+}
+
+// Functions
+
+function ApplyBenefit(benefitKey, benefit) {
+    switch (benefitKey) {
+        case "SellPriceMul":
+
+            break;
     }
 }
 
@@ -26,6 +58,8 @@ var UI = {
 console.log("still working");
 
 $(document).ready(() => {
+    $("#versionText").text(`v${Config.Version}`.toString());
+
     // Top bar buttons
     for (let topBarButtonKey in UI.topBar.buttons) {
         let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
@@ -68,4 +102,15 @@ $(document).ready(() => {
     }
 
     // Main button
+    $(UI.mainView.mainButton).mouseenter(() => {
+
+    });
+    
+    $(UI.mainView.mainButton).mousedown(() => {
+
+    });
+
+    $(UI.mainView.mainButton).mouseup(() => {
+        
+    });
 })
