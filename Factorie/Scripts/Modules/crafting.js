@@ -3,14 +3,18 @@ export let Crafting = {
 
     // Raw
 
-    Mining: {
-
+    ["Iron Mining"]: {
+        Description: "From red dust, or smooth magnetite, unto the truck and into the farlands of factories it goes.",
+        Inputs: {},
+        Outputs: {"Iron Ore": 1},
+        TimeToCraft: 1,
+        TechRequired: []
     },
 
     // Manufacturing
 
     "Iron Smelting": { // Key is title
-        Description: "It all comes from somewhere... Magnetite! Cya, oxygen.", // String, description of the technique when selected
+        Description: "Cya, oxygen.", // String, description of the technique when selected
         Inputs: {"Iron Ore": 1}, // {ProductName (string): Amount (int), ...}, what is required to start crafting
         Outputs: {Iron: 1}, // {ProductName (string): Amount (int), ...}, what is produced everytime the crafting finishes
         TimeToCraft: 2, // Number, the amount of time required to produce one set of outputs
@@ -18,7 +22,7 @@ export let Crafting = {
     },
 
     "Copper Smelting": {
-        Description: "It all comes from Bornite, Covellite, Chalcocite, etc...",
+        Description: "Bye bye iron, sulfur, antimony, zinc, carbon, oxygen, hydrogen, aluminium, silicon, nitrogen, and arsenic.",
         Inputs: {"Copper Ore": 1},
         Outputs: {Copper: 1},
         TimeToCraft: 3,
@@ -39,6 +43,14 @@ export let Crafting = {
         Outputs: {Metals: 2, Rock: 3, Silicon: 1},
         TimeToCraft: 4,
         TechRequired: ["Minerals"]
+    },
+
+    "Steel Making": {
+        Description: "Cya, carbon. Hello, chromium.",
+        Inputs: {Metals: 1, Iron: 3, Coal: 1},
+        Outputs: {Steel: 4},
+        TimeToCraft: 6,
+        TechRequired: ["Metallurgy 2"]
     },
 
     "Electronic Components Manufacturing": {

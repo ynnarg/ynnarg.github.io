@@ -17,11 +17,16 @@
             <div id="topBar">
                 <div id="topBarInner">
                     <div id="topBar_mainView" class="topBar_button">The World</div>
-                    <div id="topBar_factoryView" class="topBar_button">Factories</div>
+                    <div id="topBar_marketView" class="topBar_button">Market</div>
                     <div id="topBar_extractorView" class="topBar_button">Extractors</div>
+                    <div id="topBar_factoryView" class="topBar_button">Factories</div>
                     <div id="topBar_techView" class="topBar_button">Technology</div>
                     <div id="topBar_statsView" class="topBar_button">Stats</div>
+                    <div id="topBar_settingsView" class="topBar_button">Settings</div>
                 </div>
+            </div>
+            <div id="topBar_money_wrapper">
+                    <div id="topBar_money">$0.0</div>
             </div>
             <div id="view_wrapper">
                 <div id="versionText">v1.3.3.7</div>
@@ -29,19 +34,25 @@
                     <div id="mainView_backgroundImage"></div>
                     <div id="middle_wrapper">
                         <div id="mainButton"></div>
-                        <div id="mainProgressBar"></div>
-                    </div>
-                    <div id="selectedRecipe">Selected Recipe: Mud</div>
-                    <div id="selectRecipe">
-                        <button type="button">Select Recipe</button>
                     </div>
                 </div>
-                <div id="factoryView"></div>
+                <div id="marketView"></div>
                 <div id="extractorView"></div>
+                <div id="factoryView"></div>
                 <div id="techView"></div>
                 <div id="statsView">
-                    <div id="statsView_timePlayed" class="statsView_stat">Time played: 1 hour, 9 minutes</div>
+                    <div id="statsView_inner">
+                        <div id="statsView_timePlayed" class="statsView_stat">Time played: 1 hour, 9 minutes</div>
+                        <div id="statsView_moneyInBank" class="statsView_stat">Money in bank: $0</div>
+                        <div id="statsView_moneyMadeThisTranscendence" class="statsView_stat">Money made (this transcendence): $0</div>
+                        <div id="statsView_moneyMadeAllTime" class="statsView_stat">Money made (all time): $0</div>
+                        <div id="statsView_moneyMadePerSecond" class="statsView_stat">Money made per second: $0</div>
+                        <div id="statsView_factoriesOwned" class="statsView_stat">Factories owned: 0</div>
+                        <div id="statsView_technologyResearched" class="statsView_stat">Technology researched: 0</div>
+                        <div id="statsView_clicksMade" class="statsView_stat">Clicks made: 0</div>
+                    </div>
                 </div>
+                <div id="settingsView"></div>
             </div>
         </div>
     </body>

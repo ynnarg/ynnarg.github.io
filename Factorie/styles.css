@@ -25,6 +25,28 @@ body {
     z-index: inherit;
 }
 
+#topBar_money_wrapper {
+    position: absolute;
+    left: 50%;
+    top: calc(46px);
+    transform: translate(-50%, -50%);
+    width: calc(20% + 30px);
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 28px;
+    background-color: #222;
+    box-shadow: 0px 0px 10px 1px #000;
+    z-index: 99999;
+}
+
+#topBar_money {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFF;
+}
+
 .topBar_button {
     float: left;
     display: flex;
@@ -103,20 +125,9 @@ body {
     background-image: url("./Images/The\ Perfect\ Parts.png");
     background-repeat: no-repeat;
     background-size: 100%;
+    user-select: none;
     -webkit-filter: drop-shadow(0px 5px 5px #222);
     filter: drop-shadow(0px 5px 5px #222);
-}
-
-#mainProgressBar {
-    position: absolute;
-    left: 50%;
-    bottom: 0px;
-    width: 100%;
-    aspect-ratio: 10;
-    transform: translate(-50%, 0px);
-    background-color: #333;
-    border-radius: 4px;
-    border-color: #000;
 }
 
 #selectedRecipe {
@@ -138,17 +149,37 @@ body {
 
 /* Stats View */
 
+#statsView {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #222;
+    /*box-shadow: 0px 0px 10px 3px #AAA inset;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#statsView_inner {
+    position: absolute;
+    top: 40px;
+    bottom: 0px;
+    width: 100%;
+}
+
 .statsView_stat {
     float: left;
     display: flex;
     align-items: center;
     position: relative;
-    left: 10px;
-    right: 10px;
-    width: 90%;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    width: calc(100% - 40px);
+    padding-left: 20px;
+    padding-top: 6px;
+    padding-right: 20px;
+    padding-bottom: 6px;
+    box-shadow: 0px 0px 3px 2px #555 inset;
     text-align: left;
     font-size: 100%;
-    color: #444;
+    color: #AAA;
 }

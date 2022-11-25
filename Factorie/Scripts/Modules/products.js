@@ -157,6 +157,16 @@ export let Products = {
         FromExtractor: false
     },
 
+    Steel: {
+        Description: "Straight from the skyforge!",
+        Prices: {
+            Middle: 20,
+            Variance: 0.2,
+        },
+        Amount: 0,
+        FromExtractor: false
+    },
+
     "Electronic Component": {
         Description: "Capacitors, resistors, batteries, etc... (+4.8Kb of data left)",
         Prices: {

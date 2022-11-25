@@ -51,11 +51,20 @@ export let Tech = {
     },
 
     Electronics: {
-        Description: "'Poof, poof, poof', the wizard bravingly said as he programmed with his punch cards.              '... Oops...', the wizard quietly exclaimed.",
+        Description: "'Poof, poof, poof', the wizard said as he programmed with his punch cards.              '... Oops...', the wizard quietly exclaimed.",
         Benefits: {},
         Precursors: ["Automation"],
         Cost: 125,
         TimeToUnlock: 35,
         Unlocked: false
-    }
+    },
+
+    ["Metallurgy 2"]: {
+        Description: "A monument of a bird whose eyes and beak were opened in flame.",
+        Benefits: {},
+        Precursors: ["Metallurgy"],
+        Cost: 125,
+        TimeToUnlock: 30,
+        Unlocked: false,
+    },
 };
