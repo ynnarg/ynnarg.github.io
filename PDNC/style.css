@@ -1,0 +1,85 @@
+
+#mainHeading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    width: 90%;
+    height: 140px;
+    transform: translate(-50%);
+    text-shadow: 0px 0px 4px #555;
+    font-size: 60px;
+}
+
+#paranoia {
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    left: 50%;
+    top: 140px;
+    width: 30%;
+    height: 20px;
+    transform: translate(-50%, 0px);
+    text-shadow: 0px 0px 4px #888;
+    color: #555;
+}
+
+#search {
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    left: 50%;
+    top: 160px;
+    width: 20%;
+    height: 20px;
+    transform: translate(-50%, 0px);
+    box-shadow: 0px 0px 4px 1px #888 inset;
+    text-shadow: 0px 0px 4px #888;
+    border: 2px solid #888;
+}
+
+#news {
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    left: 50%;
+    top: 190px;
+    width: 30%;
+    height: 20px;
+    transform: translate(-50%, 0px);
+    text-shadow: 0px 0px 4px #888;
+    color: #555;
+}
+
+#results {
+    position: absolute;
+    left: 50%;
+    top: 250px;
+    width: 30%;
+    height: 1000px;
+    transform: translate(-50%, 0px);
+}
+
+.body {
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    float: left;
+    width: calc(50% - 20px);
+    height: 20px;
+    margin: 10px;
+    aspect-ratio: 1;
+    text-shadow: 0px 0px 4px #888;
+    color: #222;
+}
