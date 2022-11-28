@@ -4,7 +4,7 @@ console.log("Working");
 
 const Config = {
     CheckerAPIURL: "https://dirty.npkn.net/paranoid-domain-checker", // API URL used for domain name checking
-    DomainsToCheck: "com,net,org,com.au,io,xyz,pro,live,meme"
+    DomainsToCheck: "com,net,org,com.au,io,xyz,pro,live"
 }
 
 // Main
