@@ -1,32 +1,50 @@
 
-export let Products = {
-    // Extracted
+export let TypeTitles = {
+    RawMaterials: "Raw Materials"
+}
 
-    "Iron Ore": { // Key is title
+export let Products = {
+    // Extracted (Layer 1)
+
+    IronOre: { // Key is title
+        Title: "Iron Ore", // If there's a space in the key, the title has to be put here
         Description: "The beginning of something great.", // String, description of product when selected
         Prices: { // Dictionary, contains information about the price of the product
             Middle: 3, // Number, the general average value of the product
             Variance: 0.3, // Number, every market tick, the price will change by a percentage of variance which gets smaller as you deviate from the 'Middle', and bigger as you approach the 'Middle'
         },
-        Amount: 0, // Int, how many of the product the player owns
+        Amount: 0, // Number, how many of the product the player owns
+        MaxAmount: 1, // Number, the maximum amount the player can own
+        Type: "RawMaterials", // String, the type of product
         FromExtractor: true, // Bool, whether or not this product *can* come from an extractor
         ExtractorInfo: { // Optional (required if 'FromExtractor' is true) dictionary, contains information about extracting this resource
-            Yield: 1e21, // min(yield / yielded, 1) = current yield, basically as you yield more, the current yield used by the extractors lowers. A yield <= 0 will be infinite.
-            YieldDifficulty: 2 // 1 / yielddifficulty = yielded / extraction, as you increase this number, you get less stuff from extracting.
+            Yield: 1e21, // min(yield / yielded, 1) = current yield, basically as you yield more, the current yield used by the extractors lowers. A yield <= 0 will be infinite
+            YieldDifficulty: 200, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
+            Yielded: 0, // number, the amount yielded so far
+            TechRequired: [], // [string], techs required to unlock this extractor type
+            ExtractorCost: 15, // number, cost to buy the extractor
+            ExtractorOwned: false // bool, whether or not extractor is owned
         }
     },
 
-    "Copper Ore": {
+    CopperOre: {
+        Title: "Copper Ore",
         Description: "Conductive both thermally and electrically, and doesn't weather quickly! Perfect for cabling.",
         Prices: {
             Middle: 5,
             Variance: 0.2,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e20,
-            YieldDifficulty: 3
+            YieldDifficulty: 300,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 250,
+            ExtractorOwned: false
         }
     },
 
@@ -37,9 +55,16 @@ export let Products = {
             Variance: 0.15,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e15,
+            YieldDifficulty: 100,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 450,
+            ExtractorOwned: false
         }
     },
 
@@ -50,9 +75,16 @@ export let Products = {
             Variance: 0.5,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e17,
+            YieldDifficulty: 100,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 600,
+            ExtractorOwned: false
         }
     },
 
@@ -63,9 +95,16 @@ export let Products = {
             Variance: 0.35,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e18,
+            YieldDifficulty: 1,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 750,
+            ExtractorOwned: false
         }
     },
 
@@ -76,9 +115,16 @@ export let Products = {
             Variance: 0.05,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
-            Yield: 1e28
+            Yield: 1e28,
+            YieldDifficulty: 2,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 900,
+            ExtractorOwned: false
         }
     },
 
@@ -88,14 +134,22 @@ export let Products = {
             Middle: 2,
             Variance: 0.02,
         },
+        Amount: 0,
+        MaxAmount: 1,
+        Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
-            Yield: -1
+            Yield: -1,
+            YieldDifficulty: 0.5,
+            Yielded: 0,
+            TechRequired: [],
+            ExtractorCost: 1100,
+            ExtractorOwned: false
         }
     },
 
 
-    // Manufactured
+    // Manufactured (Layer 2)
 
     Iron: {
         Description: "The new age, the iron age.",
@@ -104,6 +158,8 @@ export let Products = {
             Variance: 0.07,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Metals",
         FromExtractor: false
     },
 
@@ -114,16 +170,20 @@ export let Products = {
             Variance: 0.06,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Metals",
         FromExtractor: false
     },
 
     Plastics: {
-        Description: "Polyethylene. Long chains of HCH that can become incredibly strong.",
+        Description: "Polyethylene. Long chains of H-C-H that can become incredibly strong.",
         Prices: {
             Middle: 2,
             Variance: 0.7,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Others",
         FromExtractor: false
     },
 
@@ -134,6 +194,8 @@ export let Products = {
             Variance: 0.2,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Metals",
         FromExtractor: false
     },
 
@@ -144,6 +206,8 @@ export let Products = {
             Variance: 0.04,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Others",
         FromExtractor: false
     },
 
@@ -154,8 +218,12 @@ export let Products = {
             Variance: 0.3,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Electronics",
         FromExtractor: false
     },
+
+    // Layer 2
 
     Steel: {
         Description: "Straight from the skyforge!",
@@ -164,16 +232,33 @@ export let Products = {
             Variance: 0.2,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Metals",
         FromExtractor: false
     },
 
-    "Electronic Component": {
+    Brass: {
+        Description: "10% Zinc, 90% Copper, and then whatever else you feel like putting in.",
+        Prices: {
+            Middle: 22,
+            Variance: 0.3,
+        },
+        Amount: 0,
+        MaxAmount: 1,
+        Type: "Metals",
+        FromExtractor: false
+    },
+
+    ElectronicComponent: {
+        Title: "Electronic Component",
         Description: "Capacitors, resistors, batteries, etc... (+4.8Kb of data left)",
         Prices: {
             Middle: 20,
             Variance: 0.1,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Electronics",
         FromExtractor: false
     },
 
@@ -184,8 +269,12 @@ export let Products = {
             Variance: 0.4,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Others",
         FromExtractor: false
     },
+    
+    // Layer 3
 
     PCB: {
         Description: "(P)rinted (C)ircuit (B)oard. (s)",
@@ -194,6 +283,8 @@ export let Products = {
             Variance: 0.3,
         },
         Amount: 0,
+        MaxAmount: 1,
+        Type: "Electronics",
         FromExtractor: false
     }
 };

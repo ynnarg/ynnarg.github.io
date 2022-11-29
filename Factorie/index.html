@@ -17,16 +17,17 @@
             <div id="topBar">
                 <div id="topBarInner">
                     <div id="topBar_mainView" class="topBar_button">The World</div>
+                    <div id="topBar_techView" class="topBar_button">Technology</div>
                     <div id="topBar_marketView" class="topBar_button">Market</div>
                     <div id="topBar_extractorView" class="topBar_button">Extractors</div>
                     <div id="topBar_factoryView" class="topBar_button">Factories</div>
-                    <div id="topBar_techView" class="topBar_button">Technology</div>
-                    <div id="topBar_statsView" class="topBar_button">Stats</div>
                     <div id="topBar_settingsView" class="topBar_button">Settings</div>
+                    <div id="topBar_statsView" class="topBar_button">Stats</div>
+                    <div id="topBar_creditsView" class="topBar_button">Credits</div>
                 </div>
             </div>
             <div id="topBar_money_wrapper">
-                    <div id="topBar_money">$0.0</div>
+                    <div id="topBar_money">$0</div>
             </div>
             <div id="view_wrapper">
                 <div id="versionText">v1.3.3.7</div>
@@ -36,11 +37,48 @@
                         <div id="mainButton"></div>
                     </div>
                 </div>
-                <div id="marketView"></div>
-                <div id="extractorView"></div>
-                <div id="factoryView"></div>
-                <div id="techView"></div>
-                <div id="statsView">
+                <div id="techView">
+                    <div id="techView_inner" class="view_inner">
+                        <div id="exampleTechnology" class="technology">
+                            <div id="exampleTechnology_tech" class="text1">Market</div>
+                            <div id="exampleTechnology_description" class="text1_transparent">Description</div>
+                            <div id="exampleTechnology_buy" class="buyButton_wrapper1">
+                                <div id="exampleTechnology_buyButton" class="buyButton1">Buy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="marketView" class="view_grayed">
+                    <div id="marketView_inner">
+                        <div id="market_empty">Oops! Looks like the market is empty! Come back when you've bought your first extractor.</div>
+                        <div id="exampleMarketSplit" class="marketSplit">
+                            <div id="exampleMarketSplit_type" class="text2">Type</div>
+                            <div id="exampleMarketSplit_section" class="marketSplit_section">
+                                <div id="exampleMarket" class="market">
+                                    <div id="exampleMarket_type" class="text1"></div>
+                                    <div id="exampleMarket_description" class="text1_transparent">Description</div>
+                                    <div id="exampleMarket_buy" class="buyButton_wrapper1">
+                                        <div id="exampleMarket_buyButton" class="buyButton1">Sell</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="extractorView">
+                    <div id="extractorView_inner" class="view_inner">
+                        <div id="exampleExtractor" class="extractor">
+                            <div id="exampleExtractor_type" class="text1">Iron Extractor</div>
+                            <div id="exampleExtractor_buy" class="buyButton_wrapper1">
+                                <div id="exampleExtractor_buyButton" class="buyButton1">Buy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="factoryView">
+                    
+                </div>
+                <div id="statsView" class="view_grayed">
                     <div id="statsView_inner">
                         <div id="statsView_timePlayed" class="statsView_stat">Time played: 1 hour, 9 minutes</div>
                         <div id="statsView_moneyInBank" class="statsView_stat">Money in bank: $0</div>
@@ -52,7 +90,8 @@
                         <div id="statsView_clicksMade" class="statsView_stat">Clicks made: 0</div>
                     </div>
                 </div>
-                <div id="settingsView"></div>
+                <div id="settingsView" class="view_grayed"></div>
+                <div id="creditsView" class="view_grayed"></div>
             </div>
         </div>
     </body>

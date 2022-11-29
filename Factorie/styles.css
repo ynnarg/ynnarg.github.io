@@ -44,6 +44,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    user-select: none;
     color: #FFF;
 }
 
@@ -98,6 +99,26 @@ body {
     -webkit-text-stroke: 0.5px #000
 }
 
+.view_grayed {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #222;
+    /*box-shadow: 0px 0px 10px 3px #AAA inset;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.view_inner {
+    position: absolute;
+    left: 20px;
+    top: 34px;
+    right: 20px;
+    bottom: 20px;
+}
+
 /* Main View */
 
 #mainView_backgroundImage {
@@ -147,19 +168,115 @@ body {
     height: 36px;
 }
 
-/* Stats View */
+/* Technology View */
 
-#statsView {
+#techView {
     position: absolute;
     left: 0px;
     top: 0px;
+    width: 100000%;
+    height: 100000%;
+}
+
+#techView_inner {
+    left: 100px;
+    top: 100px;
+    right: 100px;
+    bottom: 100px;
+    width: 0.1%;
+    height: 0.1%;
+    pointer-events: none;
+    z-index: inherit;
+}
+
+.technology {
+    float: left;
+    position: absolute;
+    width: calc(140px);
+    padding: 8px;
+    margin: 8px;
+    aspect-ratio: 1;
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    border-radius: 5%;
+    line-height: 100%;
+    font-size: 1lh;
+}
+
+/* Market View */
+
+#marketView_inner {
+    position: absolute;
+    left: 0px;
+    top: 32px;
     right: 0px;
     bottom: 0px;
-    background-color: #222;
-    /*box-shadow: 0px 0px 10px 3px #AAA inset;*/
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+#market_empty {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFF;
+    text-shadow: 0px 1px 4px #FFF;
+    font-size: 34px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.marketSplit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    float: left;
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin: 16px;
+}
+
+.marketSplit_section {
+    position: absolute;
+    left: 0px;
+    top: 36px;
+    right: 0px;
+    bottom: 0px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.market {
+    float: left;
+    position: relative;
+    height: 100%;
+    margin-right: 8px;
+    aspect-ratio: 1.5;
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    border-radius: 5%;
+}
+
+/* Extractors View */
+
+.extractor {
+    float: left;
+    position: relative;
+    width: calc(35px + 5%);
+    padding: 14px;
+    margin: 10px;
+    aspect-ratio: 1;
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    border-radius: 5%;
+    line-height: 100%;
+    font-size: 1lh;
+}
+
+/* Stats View */
 
 #statsView_inner {
     position: absolute;
@@ -182,4 +299,77 @@ body {
     text-align: left;
     font-size: 100%;
     color: #AAA;
+}
+
+/* Misc */
+
+.buyButton_wrapper1 {
+    cursor: pointer;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    height: 20px;
+    background-color: rgb(61, 192, 0);
+    filter: drop-shadow(0px 0px 2px #FFF);
+    pointer-events: all;
+}
+
+.buyButton1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    right: 1px;
+    bottom: 3px;
+    background-color: rgb(44, 138, 0);
+    user-select: none;
+    color: #FFF;
+    text-shadow: 0px 1px 4px #000;
+    pointer-events: all;
+}
+
+.text1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    color: #FFF;
+    text-shadow: 0px 1px 4px #FFF;
+    user-select: none;
+}
+
+.text1_transparent {
+    display: flex;
+    text-align: center;
+    position: absolute;
+    left: 4px;
+    top: 20px;
+    right: 4px;
+    height: 20px;
+    color: #FFFFFF88;
+    text-shadow: 0px 1px 4px #FFFFFF88;
+    font-size: 12px;
+    user-select: none;
+}
+
+.text2 {
+    text-align: left;
+    position: absolute;
+    left: 26px;
+    top: 0px;
+    right: 26px;
+    height: 36px;
+    color: #FFF;
+    text-shadow: 0px 1px 4px #FFF;
+    user-select: none;
+    font-size: 28px;
 }
