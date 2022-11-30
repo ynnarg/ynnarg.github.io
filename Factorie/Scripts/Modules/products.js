@@ -16,13 +16,14 @@ export let Products = {
         Amount: 0, // Number, how many of the product the player owns
         MaxAmount: 1, // Number, the maximum amount the player can own
         Type: "RawMaterials", // String, the type of product
+        Unit: "Kilograms", // String (not required), the unit for the product. Default is 'Units' if not provided
         FromExtractor: true, // Bool, whether or not this product *can* come from an extractor
         ExtractorInfo: { // Optional (required if 'FromExtractor' is true) dictionary, contains information about extracting this resource
             Yield: 1e21, // min(yield / yielded, 1) = current yield, basically as you yield more, the current yield used by the extractors lowers. A yield <= 0 will be infinite
             YieldDifficulty: 200, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
             Yielded: 0, // number, the amount yielded so far
             TechRequired: [], // [string], techs required to unlock this extractor type
-            ExtractorCost: 15, // number, cost to buy the extractor
+            ExtractorCost: 45, // number, cost to buy the extractor
             ExtractorOwned: false // bool, whether or not extractor is owned
         }
     },
@@ -37,6 +38,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "RawMaterials",
+        Unit: "Kilograms",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e20,
@@ -56,6 +58,7 @@ export let Products = {
         },
         Amount: 0,
         MaxAmount: 1,
+        Unit: "Kilograms",
         Type: "RawMaterials",
         FromExtractor: true,
         ExtractorInfo: {
@@ -77,6 +80,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "RawMaterials",
+        Unit: "Barrels",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e17,
@@ -97,10 +101,11 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "RawMaterials",
+        Unit: "Balloons",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e18,
-            YieldDifficulty: 1,
+            YieldDifficulty: 150,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 750,
@@ -117,6 +122,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "RawMaterials",
+        Unit: "Fractions",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e28,
@@ -137,6 +143,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "RawMaterials",
+        Unit: "Litres",
         FromExtractor: true,
         ExtractorInfo: {
             Yield: -1,

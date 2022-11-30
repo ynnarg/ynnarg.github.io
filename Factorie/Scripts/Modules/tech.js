@@ -10,7 +10,7 @@ export let Tech = {
         Description: "The basis of everything you do. Without the market, there would be no factories, no extractors, no technology, no game, no fun.", // String, description seen when tech is selected
         Benefits: {}, // A dictionary of benefits
         Precursors: [], // String, an array of precursor techs to be unlocked before this one
-        Cost: 10, // Number, cost to start unlocking
+        Cost: 5, // Number, cost to start unlocking
         Unlocked: false, // Bool, whether or not this tech is currently unlocked.
     },
 
@@ -18,7 +18,7 @@ export let Tech = {
         Description: "A tool to take from the limited supply that you have been given from Earth.",
         Benefits: {},
         Precursors: ["Market"],
-        Cost: 50,
+        Cost: 25,
         Unlocked: false,
     },
 
@@ -26,7 +26,7 @@ export let Tech = {
         Description: "Extract the clicks. What? You think these are unlimited? Your mouse has a lifetime, you know. Autoclicker? What's that?",
         Benefits: {ClickMul: 2},
         Precursors: ["Extractor"],
-        Cost: 125,
+        Cost: 750,
         Unlocked: false,
     },
 
@@ -59,7 +59,31 @@ export let Tech = {
         Benefits: {},
         Precursors: ["Extractor"],
         Cost: 500,
-        Unlocked: false
+        Unlocked: false,
+    },
+
+    Extras: {
+        Description: "Extra stuff. Probably not important.",
+        Benefits: {},
+        Precursors: ["Extractor"],
+        Cost: 100,
+        Unlocked: false,
+    },
+
+    Settings: {
+        Description: "Bet your autoclicker annoyed you for the first few minutes. Either that or you turned off the sound in which case you didn't get to enjoy the music :-)",
+        Benefits: {},
+        Precursors: ["Extras"],
+        Cost: 100,
+        Unlocked: false,
+    },
+
+    Stats: {
+        Description: "Yay! Stats! So exciting.",
+        Benefits: {},
+        Precursors: ["Extras"],
+        Cost: 100,
+        Unlocked: false,
     },
 
     Automation: {

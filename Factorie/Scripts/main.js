@@ -8,11 +8,12 @@ import { createTree, createUITree } from "./Modules/createtree.js";
 import { Crafting } from "./Modules/crafting.js";
 import { TypeTitles, Products } from "./Modules/products.js";
 import { Tech } from "./Modules/tech.js";
+import { Credits } from "./Modules/credits.js";
 
 // Config
 
 var Config = {
-    Version: "0.1.0"
+    Version: "0.1.1"
 };
 
 // Variables
@@ -82,9 +83,9 @@ var FunctionVariables = {
     ApplyBenefit: {},
     BeautifyNum: {format: [" ", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion"], prefixes: ["", "un", "duo", "tre", "quattuor", "quin", "sex", "septen", "octo", "novem"], suffixes: ["decillion", "vigintillion", "trigintillion", "quadragintillion", "quinquagintillion", "sexagintillion", "septuagintillion", "ocotogintillion", "nonagintillion"]},
     PlayMusic: {SoundInstances: {}, Animations: [], CurrentlyPlaying: null, PreviouslyPlaying: null},
-    PlaySound: {URLs: {}, SoundInstances: [], SoundIndex: 0},
+    PlaySound: {URLs: {}, SoundInstances: [], SoundIndex: 0, MaxSoundIndex: 30},
     ShowClickText: {TextInstances: [], TextIndex: 0, AnimationInstances: []},
-    SwitchView: {CurrentView: "mainView"}
+    SwitchView: {CurrentView: "mainView"},
 };
 
 // Functions
@@ -113,7 +114,7 @@ function BeautifyNum(num) {
     let negative = (num < 0);
     let fixed = num.toFixed(3);
     let decimal = "";
-    if (Math.abs(num) < 1000 && Math.floor(fixed) != fixed) { decimal = `.${fixed.toString().split(".")[1]}`; }
+    if (Math.abs(num) < 1000 && Math.floor(fixed) != fixed) { decimal = `.${fixed.toString().split(".")[1].substring(0, 2)}`; }
     num = Math.floor(Math.abs(num));
     if (fixed == num + 1) num++;
 
@@ -127,7 +128,7 @@ function BeautifyNum(num) {
             num /= 1000;
             base++;
         }
-        if (base >= FunctionVariables.BeautifyNum.format.length) { output = "Infinity"; } else { notation = FunctionVariables.BeautifyNum.format[base]; }
+        if (base >= FunctionVariables.BeautifyNum.format.length) { return "Infinity"; } else { notation = FunctionVariables.BeautifyNum.format[base]; }
     }
     output = (Math.round(num * 1000) / 1000).toString()
     if (notation) {
@@ -164,12 +165,13 @@ function PlaySound(url, volume) {
         // Sound is loaded
         volume = volume || 1.0;
 
-        scope.SoundIndex = (scope.SoundIndex + 1) % 12;
+        scope.SoundIndex = (scope.SoundIndex + 1) % scope.MaxSoundIndex;
         let sound = scope.SoundInstances[scope.SoundIndex];
         sound.pause();
+        sound.currentTime = 0;
         if (sound.src != scope.URLs[url].src) { sound.src = scope.URLs[url].src; }
-        scope.URLs[url].volume = Math.pow(volume, 2);
-        try { scope.URLs[url].play() } catch(_) {  }
+        sound.volume = Math.pow(volume, 2);
+        try { sound.play() } catch(_) {  }
     } else {
         // Sound isn't loaded
         scope.URLs[url] = new Audio(url);
@@ -223,6 +225,52 @@ function SecondsToDHMS(seconds) { // Seconds to Days, Hours, Minutes, Seconds
     return `${days} Days, ${hours} Hours, ${minutes} Minutes, ${seconds} Seconds`;
 }
 
+
+function UpdateTopbar() {
+    for (let topBarButtonKey in UI.topBar.buttons) {
+        let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
+        if (topBarButtonKey != "topBar_mainView") {
+            let visibility = "visible";
+            switch(topBarButtonKey) {
+                case "topBar_techView":
+                    if (MainVariables.MoneyAllTime < 10) { visibility = "hidden"; }
+                    break;
+                case "topBar_marketView":
+                    if (!Tech.Market.Unlocked) { visibility = "hidden"; }
+                    break;
+                case "topBar_extractorView":
+                    if (!Tech.Extractor.Unlocked) { visibility = "hidden"; }
+                    break;
+                case "topBar_factoryView":
+                    if (!Tech.Factorie.Unlocked) { visibility = "hidden"; }
+                    break;
+                case "topBar_settingsView":
+                    if (!Tech.Settings.Unlocked) { visibility = "hidden"; }
+                    break;
+                case "topBar_statsView":
+                    if (!Tech.Stats.Unlocked) { visibility = "hidden"; }
+                    break;
+                case "topBar_creditsView":
+                    visibility = "visible";
+                    break;
+                default:
+                    visibility = "visible";
+                    break;
+            }
+            // This is so hacky.
+            let props = {visibility: visibility, height: "calc(100% - 2px)", width: "80px", "padding-left": "6px", "padding-right": "6px"};
+            if (visibility == "hidden") {
+                props.height = "0px";
+                props.width = "0px";
+                props["padding-left"] = "0px";
+                props["padding-right"] = "0px"
+            }
+
+            topBarButton.css(props);
+        }
+    }
+}
+
 // Main
 
 console.log("still working");
@@ -243,9 +291,9 @@ function MainInterval() {
     $("#topBar_money").text(`$${BeautifyNum(MainVariables.Money)}`);
 
     let shouldBePhase = 0;
-    for (let i = 3; i >= 1; i--) {
-        if (MainVariables.MoneyAllTime >= Math.pow(10, i*3)) { shouldBePhase = i; break; }
-    }
+    if (Products.PCB.Amount > 0) { shouldBePhase = 2; }
+    else if (Products.Iron.Amount > 0) { shouldBePhase = 1; }
+
     if (MainVariables.CurrentPhase != shouldBePhase) {
         console.log("Next phase");
         MainVariables.CurrentPhase = shouldBePhase;
@@ -253,30 +301,8 @@ function MainInterval() {
     }
 
     // Update topbar button visibility
-    for (let topBarButtonKey in UI.topBar.buttons) {
-        let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
-        if (topBarButtonKey != "topBar_mainView") {
-            let visibility = "visible";
-            switch(topBarButtonKey) {
-                case "topBar_techView":
-                    if (MainVariables.MoneyAllTime < 10) { visibility = "hidden"; }
-                    break;
-                case "topBar_marketView":
-                    if (!Tech.Market.Unlocked) { visibility = "hidden"; }
-                    break;
-                case "topBar_extractorView":
-                    if (!Tech.Extractor.Unlocked) { visibility = "hidden"; }
-                    break;
-                case "topBar_factoryView":
-                    if (!Tech.Factorie.Unlocked) { visibility = "hidden"; }
-                    break;
-                default:
-                    visibility = "hidden";
-                    break;
-            }
-            topBarButton.css({visibility: visibility});
-        }
-    }
+    UpdateTopbar();
+    
     // Update extracted products
     for (let p in Products) {
         let product = Products[p];
@@ -290,7 +316,8 @@ function MainInterval() {
         for (let p in Products) {
             let product = Products[p];
             let jBuyButton = marketView_inner.find(`#${p}_buyButton`);
-            jBuyButton.text(`Sell ${BeautifyNum(product.Amount)} of ${product.Title || p} for $${BeautifyNum(product.Prices.Middle * product.Amount)}`);
+            let unit = product.Unit || "Units";
+            jBuyButton.text(`Sell ${BeautifyNum(product.Amount)} ${unit} of ${product.Title || p} for $${BeautifyNum(product.Prices.Middle * product.Amount)}`);
         }
     }
 
@@ -318,7 +345,7 @@ function main() {
         }
     }
 
-    for (let i = 0; i < 12; i++) { FunctionVariables.PlaySound.SoundInstances[i] = new Audio(); }
+    for (let i = 0; i < FunctionVariables.PlaySound.MaxSoundIndex; i++) { FunctionVariables.PlaySound.SoundInstances[i] = new Audio(); }
     for (let i = 0; i < 20; i++) {
         let div = document.createElement("div");
         div.appendChild(document.createTextNode(`+$${MainVariables.MoneyIncrement}`));
@@ -363,11 +390,15 @@ function main() {
 
                     MainVariables.Money -= tech.Cost;
                     jClone.find(`#${block.key}_buyButton`).text(`Unlocked`);
+                    jClone.find(`#${block.key}_buyButton`).css({"pointer-events": "none"});
+                    jClone.find(`#${block.key}_buy`).css({cursor: "auto", "pointer-events": "none"});
                     for (let techKey in Tech) {
                         if (Tech[techKey].Precursors.find((key) => { return (key == block.key); })) {
                             $(techView_inner).find(`#${techKey}`).css({visibility: "visible"});
                         }
                     }
+
+                    PlaySound("./Audio/MainClick.mp3", 0.10);
                 }
             })
 
@@ -419,6 +450,8 @@ function main() {
                 AddMoney(add);
                 ShowClickText(event.clientX, event.clientY, add);
                 Products[p].Amount = 0;
+
+                PlaySound("./Audio/MainClick.mp3", 0.10);
             })
 
             $(typeBlock).find(".marketSplit_section").append(marketClone);
@@ -454,10 +487,39 @@ function main() {
                     }
                     block.find(`#${p}`).css({visibility: "visible"});
                     MainVariables.Money -= product.ExtractorInfo.ExtractorCost;
+
                     buyButton.text(`Owned`);
+                    PlaySound("./Audio/MainClick.mp3", 0.10);
                 }
             });
             extractorView_inner.appendChild(extractor);
+        }
+    }
+
+    // Credits view
+    {
+        let creditsView_inner = document.getElementById("creditsView_inner");
+        let exampleCreditSplit = document.getElementById("exampleCreditSplit");
+        let exampleCredit = document.getElementById("exampleCredit");
+        $(exampleCreditSplit).find("#exampleCreditSplit_section").empty();
+        creditsView_inner.removeChild(exampleCreditSplit);
+        for (let creditSplitKey in Credits) {
+            let creditSplitClone = exampleCreditSplit.cloneNode(true);
+            let jCreditSplitClone = $(creditSplitClone);
+            let jCreditSplitSection = jCreditSplitClone.find("#exampleCreditSplit_section");
+            jCreditSplitClone.find("#exampleCreditSplit_type").text(creditSplitKey);
+            let heightSum = 0;
+            for (let creditKey in Credits[creditSplitKey]) {
+                let credit = Credits[creditSplitKey][creditKey];
+                let creditClone = exampleCredit.cloneNode(true);
+                let jCreditClone = $(creditClone);
+                jCreditClone.text(credit);
+                jCreditSplitSection.append(creditClone);
+                heightSum++;
+            }
+            jCreditSplitSection.css({height: `${heightSum * 20}px`});
+            jCreditSplitClone.css({height: `${heightSum * 20 + 36}px`});
+            creditsView_inner.appendChild(creditSplitClone);
         }
     }
 
@@ -549,7 +611,7 @@ function main() {
                 width: "85%",
             }, animInfo);
 
-            PlaySound("./Audio/MainClick.wav", 0.15);
+            PlaySound("./Audio/MainClick.mp3", 0.10);
         });
 
         mainButton.mouseup((event) => {
@@ -562,10 +624,11 @@ function main() {
             AddMoney(MainVariables.MoneyIncrement * MainVariables.CurrentBenefits.ClickMul);
             ShowClickText(event.clientX, event.clientY);
 
-            PlaySound("./Audio/MainClick.wav", 0.15);
+            PlaySound("./Audio/MainClick.mp3", 0.15);
         });
     }
 
+    // Tech view dragging
     {
         let techView = $(UI.views.techView.view);
         let mousedown = false;
@@ -577,6 +640,7 @@ function main() {
             mousedown = true;
             mousedownX = event.pageX; mousedownY = event.pageY;
             startPosX = techView.position().left; startPosY = techView.position().top;
+            techView.css({cursor: "grabbing"});
         });
 
         $(document).mousemove((event) => {
@@ -592,6 +656,7 @@ function main() {
             mousedown = false;
             mousedownX = null; mousedownY = null;
             startPosX = null; startPosY = null;
+            techView.css({cursor: "grab"});
         });
     }
 
