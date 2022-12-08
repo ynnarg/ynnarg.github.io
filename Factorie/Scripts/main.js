@@ -18,7 +18,7 @@ import { Credits } from "./Modules/credits.js";
 
 const Config = {
     Version: "0.2.0",
-    Testing: true,
+    Testing: false,
 };
 
 /*******************************************************************************************************************************\
