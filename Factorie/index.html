@@ -65,18 +65,45 @@
                         </div>
                     </div>
                 </div>
-                <div id="extractorView">
-                    <div id="extractorView_inner" class="view_inner">
-                        <div id="exampleExtractor" class="extractor">
-                            <div id="exampleExtractor_type" class="text1">Iron Extractor</div>
-                            <div id="exampleExtractor_buy" class="buyButton_wrapper1">
-                                <div id="exampleExtractor_buyButton" class="buyButton1">Buy</div>
+                <div id="extractorView" class="extractorView">
+                    <div id="extractorView_inner" class="extractorView_inner">
+                        <div id="exampleExtractorSplit" class="extractorSplit">
+                            <div id="exampleExtractor" class="extractor">
+                                <div id="exampleExtractor_type" class="text1" style="color: #000;">Iron Extractor</div>
+                                <div id="exampleExtractor_buy" class="buyButton_wrapper1" style="top: 100%;">
+                                    <div id="exampleExtractor_buyButton" class="buyButton1">Buy</div>
+                                </div>
+                                <div id="exampleExtractor_buyYield" class="buyButton_wrapper1" style="visibility: hidden; top: calc(100% + 30px); height: 40px;">
+                                    <div id="exampleExtractor_buyYieldButton" class="buyButton1">Upgrade Yield</div>
+                                </div>
+                                <div id="exampleExtractor_buyRichness" class="buyButton_wrapper1" style="visibility: hidden; top: calc(100% + 80px); height: 40px;">
+                                    <div id="exampleExtractor_buyRichnessButton" class="buyButton1">Upgrade Richness</div>
+                                </div>
+                                <div id="exampleExtractor_buyStorage" class="buyButton_wrapper1" style="visibility: hidden; top: calc(100% + 130px); height: 40px;">
+                                    <div id="exampleExtractor_buyStorageButton" class="buyButton1">Upgrade Storage</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="factoryView">
-                    
+                    <div id="factoryView_inner" class="view_inner">
+                        <div id="exampleFactory" class="factory">
+                            <div id="exampleFactory_buy" class="buyButton_wrapper1" style="top: 45%; bottom: 55%; height: 10%;">
+                                <div id="exampleFactory_buyButton" class="buyButton1">Buy Factory</div>
+                            </div>
+                            <div id="exampleFactory_input" class="factory_input" style="visibility: hidden;">
+                                <div id="exampleFactory_input_text">3.00 Iron : 1.00 Coal : 1.00 Metals = 4 Steel</div>
+                                <div id="exampleFactory_input_import" class="buyButton_wrapper1" style="height: 40px;">
+                                    <div id="exampleFactory_input_importButton" class="buyButton1">Import 4.50 Iron : 1.50 Coal : 1.50 Metals = 6 Steel</div>
+                                </div>
+                            </div>
+                            <div id="exampleFactory_main" class="factory_main" style="visibility: hidden;"></div>
+                            <div id="exampleFactory_output" class="factory_output" style="visibility: hidden;">
+                                <div id="exampleFactory_output_text">4.00/10.00 Steel</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="statsView" class="view_grayed">
                     <div id="statsView_inner">

@@ -11,6 +11,15 @@ export let Tech = {
         Benefits: {}, // A dictionary of benefits
         Precursors: [], // String, an array of precursor techs to be unlocked before this one
         Cost: 5, // Number, cost to start unlocking
+        /*
+        MultiInfo: { / Dictionary (not required), contains information on the upgrades after the initial upgrade
+            Descriptions: ["The basis", "of everything."], / Each value is just an array of its matching key
+            Benefits: [{}, {}], / Benefits is an array of benefits
+            Costs: [10, 15], / Costs is an array of costs, each array index corresponds with the same array index in each property
+            MultiLevel: -1, / Number, THIS IS AN EXCEPTION. This is the current multi level, -1 means none unlocked, 0 means the first index is unlocked, etc...
+            MaxMultiLevel: 1, / Number, this is the highest available *index*
+        },
+        */
         Unlocked: false, // Bool, whether or not this tech is currently unlocked.
     },
 
@@ -27,6 +36,13 @@ export let Tech = {
         Benefits: {ClickMul: 2},
         Precursors: ["Extractor"],
         Cost: 750,
+        MultiInfo: {
+            Descriptions: [],
+            Benefits: [{ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}],
+            Costs: [3000, 7500, 20000, 50000, 110000, 250000, 500000, 1250000],
+            MultiLevel: -1,
+            MaxMultiLevel: 7,
+        },
         Unlocked: false,
     },
 
@@ -41,7 +57,7 @@ export let Tech = {
     Metallurgy: {
         Description: "Anything that even barely has a metal in it involves this somehow. yep.",
         Benefits: {},
-        Precursors: ["Extractor"],
+        Precursors: ["Factorie"],
         Cost: 500,
         Unlocked: false,
     },
@@ -49,7 +65,7 @@ export let Tech = {
     Chemistry: {
         Description: "Xe + anything else -> Xe + anything else.",
         Benefits: {},
-        Precursors: ["Extractor"],
+        Precursors: ["Factorie"],
         Cost: 500,
         Unlocked: false,
     },
@@ -57,7 +73,7 @@ export let Tech = {
     Minerals: {
         Description: "Mineralology. I can say what I want.",
         Benefits: {},
-        Precursors: ["Extractor"],
+        Precursors: ["Factorie"],
         Cost: 500,
         Unlocked: false,
     },
@@ -65,8 +81,25 @@ export let Tech = {
     Extras: {
         Description: "Extra stuff. Probably not important.",
         Benefits: {},
-        Precursors: ["Extractor"],
+        Precursors: ["Factorie"],
         Cost: 100,
+        Unlocked: false,
+    },
+
+    Automation: {
+        Description: "\"I said it, I said it, manual labour is the way! Automation will ruin our society!\" -- Don't believe them.",
+        Benefits: {},
+        Precursors: ["Factorie"],
+        Cost: 850,
+        Unlocked: false,
+    },
+
+    HumanLabour: {
+        Title: "Human Labour",
+        Description: "Why could you possibly want this?",
+        Benefits: {SellPriceMul: 0.9},
+        Precursors: ["Factorie"],
+        Cost: 1_000_000_000,
         Unlocked: false,
     },
 
@@ -86,14 +119,6 @@ export let Tech = {
         Unlocked: false,
     },
 
-    Automation: {
-        Description: "\"I said it, I said it, manual labour is the way! Automation will ruin our society!\" -- Don't believe them.",
-        Benefits: {},
-        Precursors: ["Factorie"],
-        Cost: 850,
-        Unlocked: false,
-    },
-
     Electronics: {
         Description: "'Poof, poof, poof', the wizard said as he programmed with his punch cards. '... Oops...', the wizard quietly exclaimed.",
         Benefits: {},
@@ -110,4 +135,29 @@ export let Tech = {
         Cost: 1250,
         Unlocked: false,
     },
+
+    Deunionise: {
+        Description: "\"We will rise!\" -- Says the workers, \"<BLEEP> off.\" -- Says the managers.",
+        Benefits: {SellPriceMul: 2},
+        Precursors: ["HumanLabour"],
+        Cost: 500_000_000_000,
+        Unlocked: false
+    },
+
+    ElderLabour: {
+        Title: "Elder Labour",
+        Description: "No... You're not going there, are you?",
+        Benefits: {SellPriceMul: 0.5},
+        Precursors: ["HumanLabour"],
+        Cost: 1_000_000_000_000,
+        Unlocked: false
+    },
+
+    Cookies: {
+        Description: "STOP! STOP!! STOP!!! WE DO NOT WANT TO GO DOWN THIS ROUTE!!!",
+        Benefits: {SellPriceMul: 4},
+        Precursors: ["ElderLabour"],
+        Cost: 50_000_000_000_000,
+        Unlocked: false
+    }
 };

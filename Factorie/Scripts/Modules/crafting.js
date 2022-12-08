@@ -10,7 +10,11 @@ export let Crafting = {
         Inputs: {IronOre: 1}, // {ProductName (string): Amount (int), ...}, what is required to start crafting
         Outputs: {Iron: 1}, // {ProductName (string): Amount (int), ...}, what is produced everytime the crafting finishes
         TimeToCraft: 2, // Number, the amount of time required to produce one set of outputs
-        TechRequired: ["Metallurgy"] // [TechName (string), ...], all of the techs required to use this crafting technique
+        TechRequired: ["Metallurgy"], // [TechName (string), ...], all of the techs required to use this crafting technique
+        FactoryInfo: {
+            FactoryCost: 50, // Number, cost to construct the factory
+            FactoryOwned: false, // Bool, whether or not the factory is constructed
+        },
     },
 
     "Copper Smelting": {
@@ -18,15 +22,23 @@ export let Crafting = {
         Inputs: {CopperOre: 1},
         Outputs: {Copper: 1},
         TimeToCraft: 3,
-        TechRequired: ["Metallurgy"]
+        TechRequired: ["Metallurgy"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     "Steam Cracking & Polymerisation": {
         Description: "Take those nasty oils, fa- I mean gases, water, do a bunch of chemical wizardry, and now you have plastic!",
         Inputs: {Water: 3, Gas: 2, Oil: 1},
-        Outputs: {Plastic: 10},
+        Outputs: {Plastics: 10},
         TimeToCraft: 5,
-        TechRequired: ["Chemistry"]
+        TechRequired: ["Chemistry"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     "Basic Mineral Filtering": {
@@ -34,7 +46,11 @@ export let Crafting = {
         Inputs: {Minerals: 6},
         Outputs: {Metals: 2, Rock: 3, Silicon: 1},
         TimeToCraft: 4,
-        TechRequired: ["Minerals"]
+        TechRequired: ["Minerals"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     // Layer 2
@@ -44,7 +60,11 @@ export let Crafting = {
         Inputs: {Metals: 1, Iron: 3, Coal: 1},
         Outputs: {Steel: 4},
         TimeToCraft: 6,
-        TechRequired: ["Metallurgy 2"]
+        TechRequired: ["Metallurgy 2"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     "Brass Making": {
@@ -52,15 +72,23 @@ export let Crafting = {
         Inputs: {Metals: 1, Copper: 3},
         Outputs: {Brass: 4},
         TimeToCraft: 3,
-        TechRequired: ["Metallurgy 2"]
+        TechRequired: ["Metallurgy 2"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     "Electronic Components Manufacturing": {
         Description: "Melt the zinc, the tin, the lead, the iron and the copper together! Fuse in that order! You have created so many components.",
         Inputs: {Iron: 1, Copper: 3, Metals: 2},
-        Outputs: {ElectronicComponent: 60},
+        Outputs: {ElectronicComponents: 60},
         TimeToCraft: 8,
-        TechRequired: ["Electronics"]
+        TechRequired: ["Electronics"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     "Concreting": {
@@ -68,16 +96,24 @@ export let Crafting = {
         Inputs: {Rock: 2, Silicon: 1, Water: 1},
         Outputs: {Concrete: 4},
         TimeToCraft: 20,
-        TechRequired: ["Chemistry"]
+        TechRequired: ["Chemistry"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     },
 
     // Layer 3
 
     "PCB Manufacturing": {
         Description: "The magic of photolithography to create miniature silicon patterns! -- END SCRIPT -- Did I say it right? Photolithography? What a mouthful. Can I leave yet?",
-        Inputs: {Iron: 1, Copper: 2, Plastic: 1, ElectronicComponent: 40},
-        Outputs: {PCB: 1},
+        Inputs: {Iron: 1, Copper: 2, Plastics: 1, ElectronicComponents: 40},
+        Outputs: {PCBs: 1},
         TimeToCraft: 5,
-        TechRequired: ["Electronics"]
+        TechRequired: ["Electronics"],
+        FactoryInfo: {
+            FactoryCost: 50,
+            FactoryOwned: false,
+        },
     }
 };

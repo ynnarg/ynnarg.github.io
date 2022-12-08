@@ -20,17 +20,23 @@ export let Products = {
         FromExtractor: true, // Bool, whether or not this product *can* come from an extractor
         ExtractorInfo: { // Optional (required if 'FromExtractor' is true) dictionary, contains information about extracting this resource
             Yield: 1e21, // min(yield / yielded, 1) = current yield, basically as you yield more, the current yield used by the extractors lowers. A yield <= 0 will be infinite
-            YieldDifficulty: 200, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
+            YieldDifficulty: 100, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
             Yielded: 0, // number, the amount yielded so far
             TechRequired: [], // [string], techs required to unlock this extractor type
             ExtractorCost: 45, // number, cost to buy the extractor
-            ExtractorOwned: false // bool, whether or not extractor is owned
+            ExtractorBackground: "\"../../Images/The\ Perfect\ Iron\ Ore\ Extractor.png\"", // string, the background of the extractor
+            Upgrades: { // dictionary of upgrades
+                Yield: {Start: 500, PriceMul: 6, IncMul: 4.5, Level: 0}, // Each entry is a dictionary of a starting price, multiplication of that price each upgrade,
+                Richness: {Start: 5000, PriceMul: 6, IncMul: 4.5, Level: 0}, // and the actual effect multiplier, followed by it's upgrade level, starting at 0.
+                Storage: {Start: 100, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
+            ExtractorOwned: false, // bool, whether or not extractor is owned
         }
     },
 
     CopperOre: {
         Title: "Copper Ore",
-        Description: "Conductive both thermally and electrically, and doesn't weather quickly! Perfect for cabling.",
+        Description: "LET THAH ELECTRICITY FLOW THRU YAH",
         Prices: {
             Middle: 5,
             Variance: 0.2,
@@ -42,10 +48,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e20,
-            YieldDifficulty: 300,
+            YieldDifficulty: 150,
             Yielded: 0,
-            TechRequired: [],
+            TechRequired: ["Electricity"],
             ExtractorCost: 250,
+            Upgrades: {
+                Yield: {Start: 2500, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 25000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 500, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -63,10 +74,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e15,
-            YieldDifficulty: 100,
+            YieldDifficulty: 50,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 450,
+            Upgrades: {
+                Yield: {Start: 4500, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 45000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 900, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -84,10 +100,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e17,
-            YieldDifficulty: 100,
+            YieldDifficulty: 50,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 600,
+            Upgrades: {
+                Yield: {Start: 6000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 60000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 1200, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -105,10 +126,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e18,
-            YieldDifficulty: 150,
+            YieldDifficulty: 75,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 750,
+            Upgrades: {
+                Yield: {Start: 7500, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 75000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 1500, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -126,10 +152,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e28,
-            YieldDifficulty: 2,
+            YieldDifficulty: 100,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 900,
+            Upgrades: {
+                Yield: {Start: 9000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 90000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 1800, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -147,10 +178,15 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: -1,
-            YieldDifficulty: 0.5,
+            YieldDifficulty: 25,
             Yielded: 0,
             TechRequired: [],
             ExtractorCost: 1100,
+            Upgrades: {
+                Yield: {Start: 11000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Richness: {Start: 110000, PriceMul: 6, IncMul: 4.5, Level: 0},
+                Storage: {Start: 2200, PriceMul: 10.5, IncMul: 10, Level: 0}
+            },
             ExtractorOwned: false
         }
     },
@@ -256,8 +292,8 @@ export let Products = {
         FromExtractor: false
     },
 
-    ElectronicComponent: {
-        Title: "Electronic Component",
+    ElectronicComponents: {
+        Title: "Electronic Components",
         Description: "Capacitors, resistors, batteries, etc... (+4.8Kb of data left)",
         Prices: {
             Middle: 20,
@@ -283,7 +319,7 @@ export let Products = {
     
     // Layer 3
 
-    PCB: {
+    PCBs: {
         Description: "(P)rinted (C)ircuit (B)oard. (s)",
         Prices: {
             Middle: 45,

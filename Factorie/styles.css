@@ -61,6 +61,7 @@ body {
     padding-right: 6px;
     background-color: #222;
     box-shadow: 0px 0px 3px 1px #555 inset;
+    text-shadow: 0px 1px 4px #FFF;
     user-select: none;
     text-align: center;
     font-size: 100%;
@@ -96,7 +97,7 @@ body {
     font-size: 110%;
     user-select: none;
     color: #FFF;
-    -webkit-text-stroke: 0.5px #000
+    text-shadow: 0px 1px 4px #000;
 }
 
 .view_grayed {
@@ -123,7 +124,7 @@ body {
 
 #mainView_backgroundImage {
     position: absolute;
-    background-image: url("./Images/The\ Perfect\ Scene.png");
+    background-image: url("./Images/The\ Perfect\ Scene\ Phase\ 0.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -143,9 +144,10 @@ body {
     transform: translate(-50%, -50%);
     width: 85%;
     aspect-ratio: 1;
-    background-image: url("./Images/The\ Perfect\ Parts.png");
+    background-image: url("./Images/The\ Imperfect\ Tool\ 1.png");
     background-repeat: no-repeat;
     background-size: 100%;
+    image-rendering: pixelated;
     user-select: none;
     -webkit-filter: drop-shadow(0px 5px 5px #222);
     filter: drop-shadow(0px 5px 5px #222);
@@ -201,7 +203,6 @@ body {
     box-shadow: 0px 0px 3px 2px #555 inset;
     border-radius: 5%;
     line-height: 100%;
-    font-size: 1lh;
 }
 
 /* Market View */
@@ -213,7 +214,7 @@ body {
     right: 0px;
     bottom: 0px;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 #market_empty {
@@ -236,7 +237,7 @@ body {
     float: left;
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 220px;
     margin: 16px;
 }
 
@@ -244,10 +245,8 @@ body {
     position: absolute;
     left: 0px;
     top: 36px;
-    right: 0px;
     bottom: 0px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    width: max-content;
 }
 
 .market {
@@ -262,18 +261,114 @@ body {
 
 /* Extractors View */
 
-.extractor {
+.extractorView {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.extractorView_inner {
+    position: absolute;
+    width: max-content;
+    height: 100%;
+}
+
+.extractorSplit {
     float: left;
     position: relative;
-    width: calc(35px + 5%);
-    padding: 14px;
-    margin: 10px;
+    background-image: url("./Images/The\ Perfect\ Scene\ Phase\ 0.png.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    image-rendering: pixelated;
+    width: 300px;
+    height: 100%;
+    padding: 40px;
+    border-right: solid #555;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+}
+
+.extractor {
+    position: absolute;
+    left: 60px;
+    right: 60px;
     aspect-ratio: 1;
+    background-image: url("./Images/The\ Perfect\ Extractor.gif");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    filter: drop-shadow(0px 5px 5px #00000080);
+}
+
+/* Factories View */
+
+#factoryView {
+    cursor: grab;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100000%;
+    height: 100000%;
+}
+
+#factoryView_inner {
+    width: 0.1%;
+    height: 0.1%;
+    pointer-events: none;
+    z-index: inherit;
+}
+
+.factory {
+    position: absolute;
+    width: 352px;
+    aspect-ratio: 0.75;
+}
+
+.factory_input {
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    padding: 5px;
+    width: 100%;
+    height: 100px;
+    transform: translate(-50%, 0px);
     background-color: #222;
     box-shadow: 0px 0px 3px 2px #555 inset;
-    border-radius: 5%;
-    line-height: 100%;
-    font-size: 1lh;
+    text-shadow: 0px 1px 4px #FFF;
+    border-radius: 5px;
+    color: #FFF;
+    z-index: +1;
+}
+
+.factory_main {
+    position: absolute;
+    left: 0px;
+    top: 100px;
+    right: 0px;
+    bottom: 100px;
+    background-image: url("./Images/The\ Perfect\ Factorie.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    filter: drop-shadow(0px 5px 5px #00000080);
+}
+
+.factory_output {
+    position: absolute;
+    left: 50%;
+    bottom: 0px;
+    padding: 5px;
+    width: 100%;
+    height: 50px;
+    transform: translate(-50%, 0px);
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    text-shadow: 0px 1px 4px #FFF;
+    border-radius: 5px;
+    color: #FFF;
+    z-index: +1;
 }
 
 /* Stats View */
@@ -338,7 +433,6 @@ body {
 /* Misc */
 
 .buyButton_wrapper1 {
-    cursor: pointer;
     position: absolute;
     left: 10px;
     right: 10px;
@@ -346,10 +440,10 @@ body {
     height: 20px;
     background-color: rgb(61, 192, 0);
     filter: drop-shadow(0px 0px 2px #FFF);
-    pointer-events: all;
 }
 
 .buyButton1 {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;

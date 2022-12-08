@@ -1,6 +1,8 @@
 console.log("working");
 
-// Imports
+/*******************************************************************************************************************************\
+*** IMPORTS *********************************************************************************************************************
+\*******************************************************************************************************************************/
 
 import jsCookie from "./Libs/js.cookie.min.mjs";
 
@@ -10,13 +12,18 @@ import { TypeTitles, Products } from "./Modules/products.js";
 import { Tech } from "./Modules/tech.js";
 import { Credits } from "./Modules/credits.js";
 
-// Config
+/*******************************************************************************************************************************\
+*** CONFIGURATION ***************************************************************************************************************
+\*******************************************************************************************************************************/
 
-var Config = {
-    Version: "0.1.1"
+const Config = {
+    Version: "0.2.0",
+    Testing: true,
 };
 
-// Variables
+/*******************************************************************************************************************************\
+*** VARIABLES *******************************************************************************************************************
+\*******************************************************************************************************************************/
 
 var MainVariables = { // Please put in alphabetical order
     Clicks: 0,
@@ -25,8 +32,11 @@ var MainVariables = { // Please put in alphabetical order
     CurrentBenefits: {
         SellPriceMul: 1,
         ClickMul: 1,
+        StorageMul: 1
     },
+    Extractors: {},
     LastIntervalTime: null,
+    LastMajorIntervalTime: null,
     Money: 0,
     MoneyAllTime: 0,
     MoneyIncrement: 1,
@@ -59,14 +69,18 @@ var UI = {
     views: {
         mainView: {
             view: document.getElementById("mainView"),
+            view_backgroundImage: document.getElementById("mainView_backgroundImage"),
             mainButton: document.getElementById("mainButton"),
             mainProgressBar: document.getElementById("mainProgressBar"),
         }, marketView: {
-            view: document.getElementById("marketView")
+            view: document.getElementById("marketView"),
+            buyButtons: {},
+            splits: {}
         }, extractorView: {
             view: document.getElementById("extractorView")
         }, factoryView: {
-            view: document.getElementById("factoryView")
+            view: document.getElementById("factoryView"),
+            factories: [],
         }, techView: {
             view: document.getElementById("techView")
         }, statsView: {
@@ -83,12 +97,14 @@ var FunctionVariables = {
     ApplyBenefit: {},
     BeautifyNum: {format: [" ", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion"], prefixes: ["", "un", "duo", "tre", "quattuor", "quin", "sex", "septen", "octo", "novem"], suffixes: ["decillion", "vigintillion", "trigintillion", "quadragintillion", "quinquagintillion", "sexagintillion", "septuagintillion", "ocotogintillion", "nonagintillion"]},
     PlayMusic: {SoundInstances: {}, Animations: [], CurrentlyPlaying: null, PreviouslyPlaying: null},
-    PlaySound: {URLs: {}, SoundInstances: [], SoundIndex: 0, MaxSoundIndex: 30},
+    PlaySound: {URLs: {}, SoundInstances: [], SoundIndex: 0, MaxSoundIndex: 12},
     ShowClickText: {TextInstances: [], TextIndex: 0, AnimationInstances: []},
     SwitchView: {CurrentView: "mainView"},
 };
 
-// Functions
+/*******************************************************************************************************************************\
+*** FUNCTIONS *******************************************************************************************************************
+\*******************************************************************************************************************************/
 
 function AddMoney(money) {
     MainVariables.Money += money;
@@ -98,13 +114,8 @@ function AddMoney(money) {
 
 function ApplyBenefit(benefitKey, benefit) {
     switch (benefitKey) {
-        case "SellPriceMul":
-            MainVariables.CurrentBenefits.SellPriceMul *= benefit;
-            break;
-        case "ClickMul":
-            MainVariables.CurrentBenefits.ClickMul *= benefit;
-            break;
         default:
+            MainVariables.CurrentBenefits[benefitKey] *= benefit;
             break;
     }
 }
@@ -114,7 +125,8 @@ function BeautifyNum(num) {
     let negative = (num < 0);
     let fixed = num.toFixed(3);
     let decimal = "";
-    if (Math.abs(num) < 1000 && Math.floor(fixed) != fixed) { decimal = `.${fixed.toString().split(".")[1].substring(0, 2)}`; }
+    //if (Math.abs(num) < 1000 && Math.floor(fixed) != fixed) { decimal = `.${fixed.toString().split(".")[1].substring(0, 2)}`; }
+    if (Math.abs(num) < 1000) { decimal = `.${fixed.toString().split(".")[1].substring(0, 2)}`; }
     num = Math.floor(Math.abs(num));
     if (fixed == num + 1) num++;
 
@@ -142,20 +154,103 @@ function BeautifyNum(num) {
 }
 
 
-function PlayMusic(musicUrl, volume) {
-    let scope = FunctionVariables.PlayMusic;
-    for (let key in scope.SoundInstances) {
-        let sound = scope.SoundInstances[key];
-        if (key != musicUrl && scope.Animations[key] && scope.Animations[key].volume > 0) {
-            scope.Animations[key].animation.stop();
-            let animation = $(sound).animate({volume: 0}, {duration: 5000, easing: "linear"});
-            scope.Animations[key] = {volume: 0, animation: animation};
+function GetBalancedFactoryInputs(factory) {
+    let factoryUI = factory.ui;
+    let factoryKey = factory.key;
+    let crafting = Crafting[factoryKey];
+    
+    let inputs = crafting.Inputs;
+    let outputs = crafting.Outputs;
+
+    let primeInputKey = null;
+    for (let inputKey in inputs) {
+        if (!primeInputKey || inputs[inputKey] > inputs[primeInputKey]) {
+            primeInputKey = inputKey;
         }
     }
-    scope.CurrentlyPlaying = musicUrl;
-    if (scope.SoundInstances[musicUrl].paused) { scope.SoundInstances[musicUrl].play(); }
-    let animation = $(scope.SoundInstances[musicUrl]).animate({volume: Math.pow(volume, 2)}, {duration: 5000, easing: "linear"})
-    scope.Animations[musicUrl] = {volume: Math.pow(volume, 2), animation: animation};
+    let primeInput = inputs[primeInputKey];
+    let primeInputN = Products[primeInputKey].Amount;
+    let scale = 1;
+
+    for (let inputKey in inputs) {
+        let input = inputs[inputKey];
+        let inputN = Products[inputKey].Amount;
+        let requiredN = (input / primeInput) * inputN;
+        let ratio = inputN / requiredN;
+        if (!isFinite(ratio)) { scale = 0; break; }
+        if (inputN < requiredN) {
+            scale = Math.max(ratio, 0);
+        }
+    }
+
+    let scaled = {};
+    for (let inputKey in inputs) {
+        let input = inputs[inputKey];
+        let required = (input / primeInput) * Products[inputKey].Amount * scale;
+        scaled[inputKey] = required;
+    }
+
+    // Returns the scale relative the prime input, a list of scaled inputs, the prime inputs ratio amount, and the prime inputs count
+    return {Scale: scale, Scaled: scaled, PrimeInput: primeInput, PrimeInputN: primeInputN};
+}
+
+
+function MakeDraggable(view, dir, offsetView) {
+    offsetView = offsetView || view;
+    view = $(view);
+    let mousedown = false;
+    let mousedownX = null;
+    let mousedownY = null;
+    let startPosX = null;
+    let startPosY = null;
+    view.mousedown((event) => {
+        mousedown = true;
+        mousedownX = event.pageX; mousedownY = event.pageY;
+        startPosX = view.position().left; startPosY = view.position().top;
+        view.css({cursor: "grabbing"});
+    });
+
+    $(document).mousemove((event) => {
+        if (!mousedown) { return; }
+        let deltaX = event.pageX - mousedownX;
+        let deltaY = event.pageY - mousedownY;
+        let newPosX = Math.max(Math.min(startPosX + deltaX, 0), -offsetView.scrollWidth + offsetView.offsetWidth);
+        let newPosY = Math.max(Math.min(startPosY + deltaY, 0), -offsetView.scrollHeight + offsetView.offsetHeight);
+        let cssChange = {top: newPosY, left: newPosX, position: "absolute"};
+        if (dir == "x") {
+            cssChange.top = startPosY;
+        } else if (dir == "y") {
+            cssChange.left = startPosX;
+        }
+        view.css(cssChange);
+    });
+
+    $(document).mouseup(() => {
+        mousedown = false;
+        mousedownX = null; mousedownY = null;
+        startPosX = null; startPosY = null;
+        view.css({cursor: "grab"});
+    });
+}
+
+
+function PlayMusic(musicUrl, volume) {
+    $.get(`./Audio/${musicUrl}.mp3`).done(() => {
+        console.log("ok");
+        let scope = FunctionVariables.PlayMusic;
+        for (let key in scope.SoundInstances) {
+            let sound = scope.SoundInstances[key];
+            if (key != musicUrl && scope.Animations[key] && scope.Animations[key].volume > 0) {
+                scope.Animations[key].animation.stop();
+                let animation = $(sound).animate({volume: 0}, {duration: 5000, easing: "linear"});
+                scope.Animations[key] = {volume: 0, animation: animation};
+            }
+        }
+        scope.CurrentlyPlaying = musicUrl;
+        if (scope.SoundInstances[musicUrl].paused) { scope.SoundInstances[musicUrl].play(); }
+        let animation = $(scope.SoundInstances[musicUrl]).animate({volume: Math.pow(volume, 2)}, {duration: 5000, easing: "linear"})
+        scope.Animations[musicUrl] = {volume: Math.pow(volume, 2), animation: animation};
+    }).fail(() => {  });
 }
 
 
@@ -226,6 +321,59 @@ function SecondsToDHMS(seconds) { // Seconds to Days, Hours, Minutes, Seconds
 }
 
 
+function UpdateFactories() {
+    for (let factoryN in UI.views.factoryView.factories) {
+        let factory = UI.views.factoryView.factories[factoryN];
+        let factoryUI = factory.ui;
+        let factoryKey = factory.key;
+        let crafting = Crafting[factoryKey];
+        
+        let inputs = crafting.Inputs;
+        let outputs = crafting.Outputs;
+
+        let balanced = GetBalancedFactoryInputs(factory);
+        let scale = balanced.Scale;
+        let scaled = balanced.Scaled;
+        let primeInput = balanced.PrimeInput;
+        let primeInputN = balanced.PrimeInputN;
+        
+        let textString = "";
+        let isFirst = true;
+        for (let inputKey in scaled) {
+            let input = scaled[inputKey];
+            let required = (input / primeInput) * scale;
+            if (!isFinite(required)) { required = 0; }
+            let requiredStr = BeautifyNum(parseFloat(required));
+            if (!isFirst) { textString += ` : ${requiredStr}`; }
+            else { isFirst = false; textString += requiredStr; }
+            textString += ` ${(Products[inputKey] || {}).Title || inputKey}`;
+        }
+        textString += " = ";
+        isFirst = true;
+        for (let outputKey in outputs) {
+            let required = (primeInputN / primeInput) * outputs[outputKey] * scale;
+            // let required = (outputs[outputKey] / primeInputN) * scale;
+            if (!isFinite(required)) { required = 0; }
+            let requiredStr = BeautifyNum(parseFloat(required));
+            if (!isFirst) { textString += ` : ${requiredStr}` }
+            else { isFirst = false; textString += requiredStr; }
+            textString += ` ${(Products[outputKey] || {Title: `${outputKey} AN ISSUE`}).Title || outputKey}`;
+        }
+
+        factoryUI.importButton.text(textString);
+        let outputTextStr = "";
+        isFirst = true;
+        for (let outputKey in outputs) {
+            let current = BeautifyNum(parseFloat(Products[outputKey].Amount));
+            if (!isFirst) { outputTextStr += ", "; }
+            else { isFirst = false; }
+            outputTextStr += `${current} / ${BeautifyNum(parseFloat(Products[outputKey].MaxAmount))} ${Products[outputKey].Title || outputKey}`
+        }
+        factoryUI.outputText.text(outputTextStr);
+    }
+}
+
+
 function UpdateTopbar() {
     for (let topBarButtonKey in UI.topBar.buttons) {
         let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
@@ -271,43 +419,42 @@ function UpdateTopbar() {
     }
 }
 
-// Main
-
 console.log("still working");
 
-// Main Interval
+
+
+/*******************************************************************************************************************************\
+*** MAIN INTERVAL ***************************************************************************************************************
+\*******************************************************************************************************************************/
+
+
+
 function MainInterval() {
     let dt = (Date.now() - (MainVariables.LastIntervalTime || Date.now() - 0.01)) / 1000;
     MainVariables.Money = Math.round(MainVariables.Money * 100) / 100;
     MainVariables.MoneyAllTime = Math.round(MainVariables.MoneyAllTime * 100) / 100;
     MainVariables.MoneyIncrement = Math.round(MainVariables.MoneyIncrement * 100) / 100;
 
-    $("#statsView_timePlayed").text(`Time played: ${SecondsToDHMS(Date.now() - MainVariables.StartTime)}`);
-    $("#statsView_moneyInBank").text(`Money in bank: $${BeautifyNum(MainVariables.Money)}`);
-    $("#statsView_moneyMadeAllTime").text(`Money made (all time): $${BeautifyNum(MainVariables.MoneyAllTime)}`);
-    $("#statsView_clicksMade").text(`Clicks made: ${BeautifyNum(MainVariables.Clicks)}`);
-
-    $("title").text(`Factorie | $${BeautifyNum(MainVariables.Money)}`);
-    $("#topBar_money").text(`$${BeautifyNum(MainVariables.Money)}`);
-
     let shouldBePhase = 0;
-    if (Products.PCB.Amount > 0) { shouldBePhase = 2; }
-    else if (Products.Iron.Amount > 0) { shouldBePhase = 1; }
+    if (Products.PCBs.Amount > 0) { shouldBePhase = 3; }
+    else if (Products.Iron.Amount > 0) { shouldBePhase = 2; }
+    else if (Products.IronOre.Amount > 0) { shouldBePhase = 1; }
 
-    if (MainVariables.CurrentPhase != shouldBePhase) {
+    if (MainVariables.CurrentPhase < shouldBePhase) {
         console.log("Next phase");
         MainVariables.CurrentPhase = shouldBePhase;
-        PlayMusic(`Phase${shouldBePhase}`, 0.5);
+        PlayMusic(`Phase${shouldBePhase}`, 0.25);
+        $(UI.views.mainView.view_backgroundImage).css({"background-image": `url("./Images/The\ Perfect\ Scene\ Phase\ ${shouldBePhase}.png")`});
     }
-
-    // Update topbar button visibility
-    UpdateTopbar();
     
     // Update extracted products
     for (let p in Products) {
         let product = Products[p];
         if ((!product.FromExtractor) || (!product.ExtractorInfo.ExtractorOwned)) { continue; }
-        product.Amount = Math.min(product.Amount + (1 / product.ExtractorInfo.YieldDifficulty) * dt, product.MaxAmount);
+        let yieldMul = MainVariables.Extractors[p].YieldMul;
+        let richnessMul = MainVariables.Extractors[p].RichnessMul;
+        let storageMul = MainVariables.Extractors[p].StorageMul;
+        product.Amount = Math.min(product.Amount + (1 / product.ExtractorInfo.YieldDifficulty) * yieldMul * richnessMul * dt, product.MaxAmount * storageMul);
     }
 
     // Update market
@@ -315,23 +462,71 @@ function MainInterval() {
     if (marketView_inner) {
         for (let p in Products) {
             let product = Products[p];
-            let jBuyButton = marketView_inner.find(`#${p}_buyButton`);
+            let storageMul = MainVariables.CurrentBenefits.StorageMul;
+            if (product.FromExtractor) { storageMul = MainVariables.Extractors[p].StorageMul; }
+
+            let jBuyButton = UI.views.marketView.buyButtons[p];//marketView_inner.find(`#${p}_buyButton`);
             let unit = product.Unit || "Units";
-            jBuyButton.text(`Sell ${BeautifyNum(product.Amount)} ${unit} of ${product.Title || p} for $${BeautifyNum(product.Prices.Middle * product.Amount)}`);
+            jBuyButton.text(`Sell (${BeautifyNum(product.Amount)}/${BeautifyNum(product.MaxAmount * storageMul)}) ${unit} of ${product.Title || p} for $${BeautifyNum(product.Prices.Middle * product.Amount)}`);
         }
+    }
+
+    $("#topBar_money").text(`$${BeautifyNum(MainVariables.Money)}`);
+    if (!MainVariables.LastMajorIntervalTime || (Date.now() - MainVariables.LastMajorIntervalTime) >= 1000) {
+        // Run this every second
+        $("#statsView_timePlayed").text(`Time played: ${SecondsToDHMS(Date.now() - MainVariables.StartTime)}`);
+        $("#statsView_moneyInBank").text(`Money in bank: $${BeautifyNum(MainVariables.Money)}`);
+        $("#statsView_moneyMadeAllTime").text(`Money made (all time): $${BeautifyNum(MainVariables.MoneyAllTime)}`);
+        $("#statsView_clicksMade").text(`Clicks made: ${BeautifyNum(MainVariables.Clicks)}`);
+
+        $("title").text(`Factorie | $${BeautifyNum(MainVariables.Money)}`);
+
+        UpdateTopbar();
+        UpdateFactories();
+
+        let largestSplit = 0;
+        for (let s in UI.views.marketView.splits) {
+            let split = UI.views.marketView.splits[s].find(`.marketSplit_section`);
+            let splitWidth = split[0].scrollWidth + split[0].getBoundingClientRect().left;
+            if (splitWidth > largestSplit) { largestSplit = splitWidth; }
+        }
+
+        let viewWidth = $(UI.views.marketView.view)[0].scrollWidth;
+        if (largestSplit > 0) { $(UI.views.marketView.view).css({width: Math.max(largestSplit, viewWidth)}); }
+
+        MainVariables.LastMajorIntervalTime = Date.now();
     }
 
     MainVariables.LastIntervalTime = Date.now();
 }
 
-// Main Interact (calls when user performs first interaction, good for playing music)
+
+
+/*******************************************************************************************************************************\
+*** MAIN INTERACT ***************************************************************************************************************
+\*******************************************************************************************************************************/
+
+
+
 function MainInteract() {
     PlayMusic(`Phase${MainVariables.CurrentPhase}`, 0.5);
 }
 
-// Main Func
+
+
+/*******************************************************************************************************************************\
+*** MAIN FUNCTION ***************************************************************************************************************
+\*******************************************************************************************************************************/
+
+
+
 function main() {
-    // Prep
+    if (Config.Testing) { MainVariables.MoneyIncrement *= 1_000_000_000; }
+
+    // ************************** //
+    // ***** Pre Processing ***** //
+    // ************************** //
+
     $(document).mousedown((e) => {
         if (e.which == 2) { return false; }
     })
@@ -352,13 +547,18 @@ function main() {
         $(div).css({position: "absolute", "user-select": "none", "pointer-events": "none", color: "#FFF"});
         FunctionVariables.ShowClickText.TextInstances[i] = div;
     }
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
         FunctionVariables.PlayMusic.SoundInstances[`Phase${i}`] = new Audio(`./Audio/Phase${i}.mp3`);
         FunctionVariables.PlayMusic.SoundInstances[`Phase${i}`].volume = 0;
         FunctionVariables.PlayMusic.SoundInstances[`Phase${i}`].loop = true;
     }
 
-    // Technology view
+    // ************************** //
+    // ***** Views ************** //
+    // ************************** //
+
+    // ***** Technology View ***** //
+
     {
         let techView_inner = document.getElementById("techView_inner");
         let exampleTechnology = document.getElementById("exampleTechnology");
@@ -371,27 +571,51 @@ function main() {
             let clone = exampleTechnology.cloneNode(true);
 
             let jClone = $(clone);
+            let jTech = jClone.find("#exampleTechnology_tech");
+            let jDescription = jClone.find("#exampleTechnology_description");
             jClone.attr("id", `${block.key}`);
-            jClone.find("#exampleTechnology_tech").attr("id", `${block.key}_tech`);
-            jClone.find(`#${block.key}_tech`).text(`${title}`);
-            jClone.find("#exampleTechnology_description").attr("id", `${block.key}_description`);
-            jClone.find(`#${block.key}_description`).text(tech.Description);
-            jClone.find("#exampleTechnology_buy").attr("id", `${block.key}_buy`);
-            jClone.find("#exampleTechnology_buyButton").attr("id", `${block.key}_buyButton`);
-            jClone.find(`#${block.key}_buyButton`).text(`Buy ($${tech.Cost})`);
+            jTech.attr("id", `${block.key}_tech`);
+            jTech.text(title);
+            jDescription.attr("id", `${block.key}_description`);
+            jDescription.text(tech.Description);
+            let jBuy = jClone.find("#exampleTechnology_buy");
+            jBuy.attr("id", `${block.key}_buy`);
+            let jBuyButton = jClone.find("#exampleTechnology_buyButton");
+            jBuyButton.attr("id", `${block.key}_buyButton`);
+            jBuyButton.text(`Buy ($${BeautifyNum(tech.Cost)})`);
             jClone.css({top: `${block.top}px`, left: `${block.left}px`, visibility: (tech.Precursors.length > 0 && "hidden") || "visible"});
 
-            jClone.find(`#${block.key}_buyButton`).mouseup(() => {
-                if (!Tech[block.key].Unlocked && MainVariables.Money >= tech.Cost) {
+            jBuyButton.mouseup(() => {
+                let isMultiAvailable = false;
+                let cost = tech.Cost;
+                let benefits = tech.Benefits;
+                if ((tech.Unlocked) && tech.MultiInfo && tech.MultiInfo.MultiLevel < tech.MultiInfo.MaxMultiLevel) {
+                    isMultiAvailable = true;
+                    cost = tech.MultiInfo.Costs[tech.MultiInfo.MultiLevel + 1];
+                    benefits = tech.MultiInfo.Benefits[tech.MultiInfo.MultiLevel + 1];
+                }
+
+                if ((isMultiAvailable || !Tech[block.key].Unlocked) && MainVariables.Money >= cost) {
                     Tech[block.key].Unlocked = true;
-                    for (let benefitKey in tech.Benefits) {
-                        ApplyBenefit(benefitKey, tech.Benefits[benefitKey]);
+                    if (isMultiAvailable) {
+                        Tech[block.key].MultiInfo.MultiLevel++;
                     }
 
-                    MainVariables.Money -= tech.Cost;
-                    jClone.find(`#${block.key}_buyButton`).text(`Unlocked`);
-                    jClone.find(`#${block.key}_buyButton`).css({"pointer-events": "none"});
-                    jClone.find(`#${block.key}_buy`).css({cursor: "auto", "pointer-events": "none"});
+                    for (let benefitKey in benefits) {
+                        ApplyBenefit(benefitKey, benefits[benefitKey]);
+                    }
+
+                    MainVariables.Money -= cost;
+                    if (!tech.MultiInfo || (tech.MultiInfo.MultiLevel >= tech.MultiInfo.MaxMultiLevel)) {
+                        jBuyButton.text(`Unlocked`);
+                        jBuyButton.css({"pointer-events": "none"});
+                        jBuy.css({cursor: "auto", "pointer-events": "none"});
+                    } else {
+                        let desc = tech.MultiInfo.Descriptions[tech.MultiInfo.MultiLevel]
+                        if (desc) { jDescription.text(tech.MultiInfo.Descriptions[tech.MultiInfo.MultiLevel]); }
+                        jBuyButton.text(`(${tech.MultiInfo.MultiLevel + 2}) Buy ($${tech.MultiInfo.Costs[tech.MultiInfo.MultiLevel + 1]})`);
+                    }
+
                     for (let techKey in Tech) {
                         if (Tech[techKey].Precursors.find((key) => { return (key == block.key); })) {
                             $(techView_inner).find(`#${techKey}`).css({visibility: "visible"});
@@ -399,6 +623,8 @@ function main() {
                     }
 
                     PlaySound("./Audio/MainClick.mp3", 0.10);
+                } else if ((!isMultiAvailable && tech.Unlocked) || MainVariables.Money < cost) {
+                    PlaySound("./Audio/BadClick.mp3", 0.15);
                 }
             })
 
@@ -406,7 +632,8 @@ function main() {
         }
     }
 
-    // Market View
+    // ***** Market View ***** //
+
     let marketView_inner = document.getElementById("marketView_inner");
     let marketTypeBlocks = {};
     {
@@ -427,6 +654,7 @@ function main() {
             jMarketSplit.css({visibility: "hidden"});
             marketView_inner.appendChild(marketSplit);
             marketTypeBlocks[product.Type] = {Block: marketSplit, Visible: false};
+            UI.views.marketView.splits[product.Type] = jMarketSplit;
         }
 
         for (let p in Products) {
@@ -434,15 +662,16 @@ function main() {
             let typeBlock = marketTypeBlocks[product.Type].Block;
             let marketClone = exampleMarket.cloneNode(true);
             let jMarketClone = $(marketClone);
-            jMarketClone.attr("id", p);
+            jMarketClone.attr("id", `product_${p}`);
             jMarketClone.find("#exampleMarket_type").attr("id", `${p}_type`);
             jMarketClone.find(`#${p}_type`).text(`${product.Title || p}`);
             jMarketClone.find("#exampleMarket_description").attr("id", `${p}_description`);
             jMarketClone.find(`#${p}_description`).text(product.Description);
             jMarketClone.find("#exampleMarket_buy").attr("id", `${p}_buy`);
-            jMarketClone.find(`#${p}_buy`).css({height: "40px"});
-            jMarketClone.find("#exampleMarket_buyButton").attr("id", `${p}_buyButton`);
-            jMarketClone.css({visibility: "hidden"});
+            jMarketClone.find(`#${p}_buy`).css({height: "60px"});
+            let jBuyButton = jMarketClone.find("#exampleMarket_buyButton");
+            jBuyButton.attr("id", `${p}_buyButton`);
+            jMarketClone.css({visibility: "hidden", position: "absolute"});
 
             jMarketClone.find(`#${p}_buy`).mouseup((event) => {
                 if (Products[p].Amount <= 0) { return; }
@@ -455,29 +684,46 @@ function main() {
             })
 
             $(typeBlock).find(".marketSplit_section").append(marketClone);
+            UI.views.marketView.buyButtons[p] = jBuyButton;
         }
     }
 
-    // Extractor view
+    // ***** Extractor View ***** //
+
     {
         let extractorView_inner = document.getElementById("extractorView_inner");
+        let exampleExtractorSplit = document.getElementById("exampleExtractorSplit");
         let exampleExtractor = document.getElementById("exampleExtractor");
-        extractorView_inner.removeChild(exampleExtractor);
+        exampleExtractorSplit.removeChild(exampleExtractor);
+        extractorView_inner.removeChild(exampleExtractorSplit);
         for (let p in Products) {
             let product = Products[p];
             if (!product.FromExtractor) { continue; }
+            MainVariables.Extractors[p] = {YieldMul: 1, RichnessMul: 1, StorageMul: 1};
+            let extractorInfo = product.ExtractorInfo;
+            let extractorSplit = exampleExtractorSplit.cloneNode(true);
             let extractor = exampleExtractor.cloneNode(true);
-            $(extractor).attr("id", p);
-            let type = $(extractor).find("#exampleExtractor_type");
+            let jExtractor = $(extractor);
+            let type = jExtractor.find("#exampleExtractor_type");
+            let buy_wrapper = jExtractor.find("#exampleExtractor_buy");
+            let buyButton = jExtractor.find("#exampleExtractor_buyButton");
+            let buyYieldButton = jExtractor.find("#exampleExtractor_buyYieldButton");
+            let buyRichnessButton = jExtractor.find("#exampleExtractor_buyRichnessButton");
+            let buyStorageButton = jExtractor.find("#exampleExtractor_buyStorageButton");
+            jExtractor.attr("id", p);
             type.attr("id", `${p}_type`)
             type.text(`${product.Title || p} Ex.`);
-            let buy_wrapper = $(extractor).find("#exampleExtractor_buy");
             buy_wrapper.attr("id", `${p}_buy`);
-            let buyButton = $(extractor).find("#exampleExtractor_buyButton");
             buyButton.attr("id", `${p}_buy`);
-            buyButton.text(`Buy ($${product.ExtractorInfo.ExtractorCost})`);
+            buyButton.text(`Buy ($${extractorInfo.ExtractorCost})`);
+            buyYieldButton.text(`Upgrade Yield ($${extractorInfo.Upgrades.Yield.Start})`);
+            buyRichnessButton.text(`Upgrade Richness ($${extractorInfo.Upgrades.Richness.Start})`);
+            buyStorageButton.text(`Upgrade Storage ($${extractorInfo.Upgrades.Storage.Start})`);
+
+            if (extractorInfo.ExtractorBackground) { $(extractorSplit).css({"background-image": `url(${extractorInfo.ExtractorBackground})`}); }
+
             buyButton.mouseup(() => {
-                if (!product.ExtractorInfo.ExtractorOwned && MainVariables.Money >= product.ExtractorInfo.ExtractorCost) {
+                if (!extractorInfo.ExtractorOwned && MainVariables.Money >= extractorInfo.ExtractorCost) {
                     let block = $(marketView_inner).find(`#${product.Type}`);
                     Products[p].ExtractorInfo.ExtractorOwned = true;
                     $(marketView_inner).find("#market_empty").text("");
@@ -485,18 +731,156 @@ function main() {
                         marketTypeBlocks[product.Type].Visible = true;
                         block.css({visibility: "visible"});
                     }
-                    block.find(`#${p}`).css({visibility: "visible"});
-                    MainVariables.Money -= product.ExtractorInfo.ExtractorCost;
+                    block.find(`#product_${p}`).css({visibility: "visible", position: "relative"});
+
+                    buyYieldButton.css({visibility: "visible"});
+                    buyRichnessButton.css({visibility: "visible"});
+                    buyStorageButton.css({visibility: "visible"});
+
+                    MainVariables.Money -= extractorInfo.ExtractorCost;
 
                     buyButton.text(`Owned`);
                     PlaySound("./Audio/MainClick.mp3", 0.10);
+                } else {
+                    PlaySound("./Audio/BadClick.mp3", 0.15);
                 }
             });
-            extractorView_inner.appendChild(extractor);
+
+            let mouseupButton = (button, upgradeName) => {
+                let upgrade = extractorInfo.Upgrades[upgradeName];
+                let cost = upgrade.Start * Math.max(upgrade.PriceMul**upgrade.Level, 1);
+                if (MainVariables.Money >= cost) {
+                    upgrade.Level++;
+                    MainVariables.Extractors[p][`${upgradeName}Mul`] *= upgrade.IncMul;
+
+                    MainVariables.Money -= cost;
+
+                    button.text(`Upgrade ${upgradeName} ($${BeautifyNum(upgrade.Start * upgrade.PriceMul**upgrade.Level)})`);
+                    PlaySound("./Audio/MainClick.mp3", 0.10);
+                } else {
+                    PlaySound("./Audio/BadClick.mp3", 0.15);
+                }
+            }
+
+            buyYieldButton.mouseup(() => { mouseupButton(buyYieldButton, "Yield"); });
+            buyRichnessButton.mouseup(() => { mouseupButton(buyRichnessButton, "Richness"); });
+            buyStorageButton.mouseup(() => { mouseupButton(buyStorageButton, "Storage"); });
+
+            extractorSplit.appendChild(extractor);
+            extractorView_inner.appendChild(extractorSplit);
         }
     }
 
-    // Credits view
+    // ***** Factories View ***** //
+
+    {
+        let factoryView_inner = document.getElementById("factoryView_inner");
+        let exampleFactory = document.getElementById("exampleFactory");
+        factoryView_inner.removeChild(exampleFactory);
+        let craftingUITree = createUITree(MainVariables.CraftingTree, 500, 20, 100);
+        for (let blockKey in craftingUITree) {
+            let block = craftingUITree[blockKey];
+            let crafting = Crafting[block.key];
+
+            let factoryClone = exampleFactory.cloneNode(true);
+            let jFactoryClone = $(factoryClone);
+            let jFactoryBuy = jFactoryClone.find("#exampleFactory_buy");
+            let jFactoryBuyButton = jFactoryClone.find("#exampleFactory_buyButton");
+            let jFactoryInput = jFactoryClone.find("#exampleFactory_input");
+            let jFactoryInputText = jFactoryClone.find("#exampleFactory_input_text");
+            let jFactoryImport = jFactoryClone.find("#exampleFactory_input_import");
+            let jFactoryImportButton = jFactoryClone.find("#exampleFactory_input_importButton");
+            let jFactoryMain = jFactoryClone.find("#exampleFactory_main");
+            let jFactoryOutput = jFactoryClone.find("#exampleFactory_output");
+            let jFactoryOutputText = jFactoryClone.find("#exampleFactory_output_text");
+
+            jFactoryClone.attr("id", `${block.key}Factory`);
+            jFactoryBuy.attr("id", `${block.key}Factory_buy`);
+            jFactoryBuyButton.attr("id", `${block.key}Factory_buyButton`);
+            jFactoryInput.attr("id", `${block.key}Factory_input`);
+            jFactoryInputText.attr("id", `${block.key}Factory_input_text`);
+            jFactoryImport.attr("id", `${block.key}Factory_input_import`);
+            jFactoryImportButton.attr("id", `${block.key}Factory_input_importButton`);
+            jFactoryMain.attr("id", `${block.key}Factory_main`);
+            jFactoryOutput.attr("id", `${block.key}Factory_output`);
+            jFactoryOutputText.attr("id", `${block.key}Factory_output_text`);
+            let factory = {ui: {
+                head: jFactoryClone, input: jFactoryInput, inputText: jFactoryInputText, importButton: jFactoryImportButton,
+                main: jFactoryMain, output: jFactoryOutput, outputText: jFactoryOutputText
+            }, key: block.key};
+
+            let inputTextStr = null;
+            for (let inputKey in crafting.Inputs) {
+                let input = BeautifyNum(parseFloat(crafting.Inputs[inputKey]));
+                if (inputTextStr) { inputTextStr += ` : ${input}`; }
+                else { inputTextStr = input; }
+                inputTextStr += ` ${(Products[inputKey] || {Title: `${inputKey} AN ISSUE`}).Title || inputKey}`;
+            }
+            inputTextStr += " = ";
+            let isFirst = true;
+            for (let outputKey in crafting.Outputs) {
+                let output = BeautifyNum(parseFloat(crafting.Outputs[outputKey]));
+                if (!isFirst) { inputTextStr += ` : ${output}`; }
+                else { isFirst = false; inputTextStr += output; }
+                inputTextStr += ` ${(Products[outputKey] || {Title: `${outputKey} AN ISSUE`}).Title || outputKey}`;
+            }
+            jFactoryInputText.text(inputTextStr);
+
+            jFactoryBuyButton.mouseup(() => {
+                if (!crafting.FactoryInfo.FactoryOwned && MainVariables.Money >= crafting.FactoryInfo.FactoryCost) {
+                    crafting.FactoryInfo.FactoryOwned = true;
+
+                    for (let p in crafting.Outputs) {
+                        let product = Products[p];
+                        let block = $(marketView_inner).find(`#${product.Type}`);
+                        $(marketView_inner).find("#market_empty").text("");
+                        if (!marketTypeBlocks[product.Type].Visible) {
+                            marketTypeBlocks[product.Type].Visible = true;
+                            block.css({visibility: "visible"});
+                        }
+                        block.find(`#product_${p}`).css({visibility: "visible", position: "relative"});
+                    }
+                    
+                    jFactoryBuyButton.css({visibility: "hidden"});
+                    jFactoryInput.css({visibility: "visible"});
+                    jFactoryMain.css({visibility: "visible"});
+                    jFactoryOutput.css({visibility: "visible"});
+                    PlaySound("./Audio/MainClick.mp3", 0.10);
+                } else {
+                    PlaySound("./Audio/BadClick.mp3", 0.15);
+                }
+            });
+
+            jFactoryImport.mouseup(() => {
+                let balanced = GetBalancedFactoryInputs(factory);
+                let scale = balanced.Scale;
+                let scaled = balanced.Scaled;
+                let primeInput = balanced.PrimeInput;
+                let primeInputN = balanced.PrimeInputN;
+
+                if (primeInputN <= 0) { return; }
+                for (let inputKey in scaled) {
+                    Products[inputKey].Amount -= scaled[inputKey];
+                }
+
+                for (let outputKey in crafting.Outputs) {
+                    let required = (primeInputN / primeInput) * crafting.Outputs[outputKey] * scale;
+                    Products[outputKey].Amount += required;
+                }
+
+                UpdateFactories();
+            });
+
+
+            UI.views.factoryView.factories.push(factory);
+
+            jFactoryClone.css({left: `${block.left}px`, top: `${block.top}px`});
+            factoryView_inner.appendChild(factoryClone);
+        }
+    }
+
+    // ***** Credits View ***** //
+
     {
         let creditsView_inner = document.getElementById("creditsView_inner");
         let exampleCreditSplit = document.getElementById("exampleCreditSplit");
@@ -523,7 +907,8 @@ function main() {
         }
     }
 
-    // Remove other views
+    // ***** Remove Other Views ***** //
+
     for (let key in UI.views) {
         let view = UI.views[key].view;
         if (view && key != "mainView" && view.parentElement) {
@@ -531,7 +916,13 @@ function main() {
         }
     }
 
-    // Top bar buttons
+
+    // ************************** //
+    // ***** Other ************** //
+    // ************************** //
+
+    // ***** Top Bar Buttons ***** //
+
     for (let topBarButtonKey in UI.topBar.buttons) {
         let topBarButton = $(UI.topBar.buttons[topBarButtonKey]);
 
@@ -585,11 +976,15 @@ function main() {
             })
         })
     }
-    // Main button
+
+    // ***** Main Button ***** //
+
     {
         let mainButton = $(UI.views.mainView.mainButton);
         let currentAnim = null;
         let animInfo = {duration: 1000, specialEasing: {width: "easeOutElastic"}};
+        let intervalId = null;
+        let toolN = 0;
         mainButton.mouseenter(() => {
             if (currentAnim) currentAnim.stop();
             currentAnim = mainButton.animate({
@@ -605,6 +1000,19 @@ function main() {
         });
         
         mainButton.mousedown(() => {
+            if (toolN == 0) {
+                toolN++;
+                setTimeout(() => {
+                    toolN++;
+                    mainButton.css({"background-image": `url("./Images/The\ Imperfect\ Tool\ ${toolN}.png")`});
+                    setTimeout(() => {
+                        toolN++;
+                        mainButton.css({"background-image": `url("./Images/The\ Imperfect\ Tool\ ${toolN}.png")`});
+                        setTimeout(() => { toolN++; }, 150);
+                    }, 100);
+                }, 100);
+            }
+
             if (currentAnim) currentAnim.stop();
             if (currentAnim) currentAnim.stop();
             currentAnim = mainButton.animate({
@@ -615,6 +1023,23 @@ function main() {
         });
 
         mainButton.mouseup((event) => {
+            if (!intervalId && toolN > 0) {
+                intervalId = setInterval(() => {
+                    if (toolN == 4) {
+                        toolN--;
+                        clearInterval(intervalId);
+                        setTimeout(() => {
+                            toolN--;
+                            mainButton.css({"background-image": `url("./Images/The\ Imperfect\ Tool\ ${toolN}.png")`});
+                            setTimeout(() => {
+                                toolN--;
+                                mainButton.css({"background-image": `url("./Images/The\ Imperfect\ Tool\ ${toolN}.png")`});
+                                setTimeout(() => { toolN--; intervalId = null; }, 150)
+                            }, 100)
+                        }, 100)
+                    }
+                });
+            }
             if (currentAnim) currentAnim.stop();
             currentAnim = mainButton.animate({
                 width: "90%",
@@ -628,37 +1053,12 @@ function main() {
         });
     }
 
-    // Tech view dragging
-    {
-        let techView = $(UI.views.techView.view);
-        let mousedown = false;
-        let mousedownX = null;
-        let mousedownY = null;
-        let startPosX = null;
-        let startPosY = null;
-        techView.mousedown((event) => {
-            mousedown = true;
-            mousedownX = event.pageX; mousedownY = event.pageY;
-            startPosX = techView.position().left; startPosY = techView.position().top;
-            techView.css({cursor: "grabbing"});
-        });
+    // ***** Post Processing ***** //
 
-        $(document).mousemove((event) => {
-            if (!mousedown) { return; }
-            let deltaX = event.pageX - mousedownX;
-            let deltaY = event.pageY - mousedownY;
-            let newPosX = Math.min(startPosY + deltaY, 0);
-            let newPosY = Math.min(startPosX + deltaX, 0);
-            techView.css({top: newPosX, left: newPosY, position: "absolute"});
-        });
-
-        $(document).mouseup(() => {
-            mousedown = false;
-            mousedownX = null; mousedownY = null;
-            startPosX = null; startPosY = null;
-            techView.css({cursor: "grab"});
-        });
-    }
+    MakeDraggable(UI.views.techView.view, null, $(UI.views.techView.view).find("#techView_inner")[0]);
+    MakeDraggable(UI.views.marketView.view);
+    MakeDraggable(UI.views.extractorView.view, "x");
+    MakeDraggable(UI.views.factoryView.view, null, $(UI.views.factoryView.view).find("#factoryView_inner")[0]);
 
     setInterval(MainInterval, 1000 / 60); // Every 60 milliseconds
 }
