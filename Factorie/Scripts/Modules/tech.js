@@ -137,7 +137,7 @@ export let Tech = {
     },
 
     Deunionise: {
-        Description: "\"We will rise!\" -- Says the workers, \"<BLEEP> off.\" -- Says the managers.",
+        Description: "\"We will rise!\" -- Says the workers, \"<BLEEP> off.\" -- Says the managers, in as professional of a tone they can manage.",
         Benefits: {SellPriceMul: 2},
         Precursors: ["HumanLabour"],
         Cost: 500_000_000_000,

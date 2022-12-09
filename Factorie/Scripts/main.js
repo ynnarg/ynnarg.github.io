@@ -1,8 +1,12 @@
 console.log("working");
 
+
+
 /*******************************************************************************************************************************\
 *** IMPORTS *********************************************************************************************************************
 \*******************************************************************************************************************************/
+
+
 
 import jsCookie from "./Libs/js.cookie.min.mjs";
 
@@ -12,18 +16,26 @@ import { TypeTitles, Products } from "./Modules/products.js";
 import { Tech } from "./Modules/tech.js";
 import { Credits } from "./Modules/credits.js";
 
+
+
 /*******************************************************************************************************************************\
 *** CONFIGURATION ***************************************************************************************************************
 \*******************************************************************************************************************************/
 
+
+
 const Config = {
-    Version: "0.2.0",
-    Testing: false,
+    Version: "0.2.1",
+    Testing: true,
 };
+
+
 
 /*******************************************************************************************************************************\
 *** VARIABLES *******************************************************************************************************************
 \*******************************************************************************************************************************/
+
+
 
 var MainVariables = { // Please put in alphabetical order
     Clicks: 0,
@@ -102,9 +114,13 @@ var FunctionVariables = {
     SwitchView: {CurrentView: "mainView"},
 };
 
+
+
 /*******************************************************************************************************************************\
 *** FUNCTIONS *******************************************************************************************************************
 \*******************************************************************************************************************************/
+
+
 
 function AddMoney(money) {
     MainVariables.Money += money;
@@ -826,6 +842,7 @@ function main() {
             }
             jFactoryInputText.text(inputTextStr);
 
+            jFactoryBuyButton.text(`Buy Factory ($${crafting.FactoryInfo.FactoryCost})`);
             jFactoryBuyButton.mouseup(() => {
                 if (!crafting.FactoryInfo.FactoryOwned && MainVariables.Money >= crafting.FactoryInfo.FactoryCost) {
                     crafting.FactoryInfo.FactoryOwned = true;
@@ -845,6 +862,8 @@ function main() {
                     jFactoryInput.css({visibility: "visible"});
                     jFactoryMain.css({visibility: "visible"});
                     jFactoryOutput.css({visibility: "visible"});
+
+                    MainVariables.Money -= crafting.FactoryInfo.FactoryCost;
                     PlaySound("./Audio/MainClick.mp3", 0.10);
                 } else {
                     PlaySound("./Audio/BadClick.mp3", 0.15);
@@ -999,7 +1018,9 @@ function main() {
             }, animInfo);
         });
         
+        let mousedown = false;
         mainButton.mousedown(() => {
+            mousedown = true;
             if (toolN == 0) {
                 toolN++;
                 setTimeout(() => {
@@ -1022,7 +1043,10 @@ function main() {
             PlaySound("./Audio/MainClick.mp3", 0.10);
         });
 
-        mainButton.mouseup((event) => {
+        $(document).mouseup((event) => {
+            if (!mousedown) { return; }
+            mousedown = false;
+
             if (!intervalId && toolN > 0) {
                 intervalId = setInterval(() => {
                     if (toolN == 4) {
@@ -1056,7 +1080,7 @@ function main() {
     // ***** Post Processing ***** //
 
     MakeDraggable(UI.views.techView.view, null, $(UI.views.techView.view).find("#techView_inner")[0]);
-    MakeDraggable(UI.views.marketView.view);
+    MakeDraggable(UI.views.marketView.view, null, $(UI.views.techView.view).find("#marketView_inner")[0]);
     MakeDraggable(UI.views.extractorView.view, "x");
     MakeDraggable(UI.views.factoryView.view, null, $(UI.views.factoryView.view).find("#factoryView_inner")[0]);
 
