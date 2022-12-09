@@ -26,7 +26,7 @@ import { Credits } from "./Modules/credits.js";
 
 const Config = {
     Version: "0.2.1",
-    Testing: true,
+    Testing: false,
 };
 
 
