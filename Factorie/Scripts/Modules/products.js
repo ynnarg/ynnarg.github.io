@@ -20,10 +20,10 @@ export let Products = {
         FromExtractor: true, // Bool, whether or not this product *can* come from an extractor
         ExtractorInfo: { // Optional (required if 'FromExtractor' is true) dictionary, contains information about extracting this resource
             Yield: 1e21, // min(yield / yielded, 1) = current yield, basically as you yield more, the current yield used by the extractors lowers. A yield <= 0 will be infinite
-            YieldDifficulty: 100, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
+            YieldDifficulty: 65, // 1 / yielddifficulty = yielded per extraction, as you increase this number, you get less stuff from extracting
             Yielded: 0, // number, the amount yielded so far
             TechRequired: [], // [string], techs required to unlock this extractor type
-            ExtractorCost: 45, // number, cost to buy the extractor
+            ExtractorCost: 15, // number, cost to buy the extractor
             ExtractorBackground: "\"../../Images/The\ Perfect\ Iron\ Ore\ Extractor.png\"", // string, the background of the extractor
             Upgrades: { // dictionary of upgrades
                 Yield: {Start: 500, PriceMul: 6, IncMul: 4.5, Level: 0}, // Each entry is a dictionary of a starting price, multiplication of that price each upgrade,
@@ -48,10 +48,10 @@ export let Products = {
         FromExtractor: true,
         ExtractorInfo: {
             Yield: 1e20,
-            YieldDifficulty: 150,
+            YieldDifficulty: 100,
             Yielded: 0,
             TechRequired: ["Electricity"],
-            ExtractorCost: 250,
+            ExtractorCost: 125,
             Upgrades: {
                 Yield: {Start: 2500, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 25000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -77,7 +77,7 @@ export let Products = {
             YieldDifficulty: 50,
             Yielded: 0,
             TechRequired: [],
-            ExtractorCost: 450,
+            ExtractorCost: 250,
             Upgrades: {
                 Yield: {Start: 4500, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 45000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -103,7 +103,7 @@ export let Products = {
             YieldDifficulty: 50,
             Yielded: 0,
             TechRequired: [],
-            ExtractorCost: 600,
+            ExtractorCost: 450,
             Upgrades: {
                 Yield: {Start: 6000, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 60000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -129,7 +129,7 @@ export let Products = {
             YieldDifficulty: 75,
             Yielded: 0,
             TechRequired: [],
-            ExtractorCost: 750,
+            ExtractorCost: 500,
             Upgrades: {
                 Yield: {Start: 7500, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 75000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -155,7 +155,7 @@ export let Products = {
             YieldDifficulty: 100,
             Yielded: 0,
             TechRequired: [],
-            ExtractorCost: 900,
+            ExtractorCost: 600,
             Upgrades: {
                 Yield: {Start: 9000, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 90000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -181,7 +181,7 @@ export let Products = {
             YieldDifficulty: 25,
             Yielded: 0,
             TechRequired: [],
-            ExtractorCost: 1100,
+            ExtractorCost: 800,
             Upgrades: {
                 Yield: {Start: 11000, PriceMul: 6, IncMul: 4.5, Level: 0},
                 Richness: {Start: 110000, PriceMul: 6, IncMul: 4.5, Level: 0},
@@ -203,6 +203,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Metals",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -215,6 +216,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Metals",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -227,6 +229,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Others",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -239,6 +242,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Metals",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -251,6 +255,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Others",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -277,6 +282,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Metals",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -289,6 +295,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Metals",
+        Unit: "Kilograms",
         FromExtractor: false
     },
 
@@ -314,6 +321,7 @@ export let Products = {
         Amount: 0,
         MaxAmount: 1,
         Type: "Others",
+        Unit: "Kilograms",
         FromExtractor: false
     },
     

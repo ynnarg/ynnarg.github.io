@@ -25,7 +25,7 @@ import { Credits } from "./Modules/credits.js";
 
 
 const Config = {
-    Version: "0.2.1",
+    Version: "0.2.2",
     Testing: false,
 };
 
@@ -353,18 +353,18 @@ function UpdateFactories() {
         let primeInput = balanced.PrimeInput;
         let primeInputN = balanced.PrimeInputN;
         
-        let textString = "";
+        let textString = "Import ";
         let isFirst = true;
         for (let inputKey in scaled) {
             let input = scaled[inputKey];
-            let required = (input / primeInput) * scale;
+            let required = (input / primeInput);
             if (!isFinite(required)) { required = 0; }
             let requiredStr = BeautifyNum(parseFloat(required));
             if (!isFirst) { textString += ` : ${requiredStr}`; }
             else { isFirst = false; textString += requiredStr; }
             textString += ` ${(Products[inputKey] || {}).Title || inputKey}`;
         }
-        textString += " = ";
+        textString += " for ";
         isFirst = true;
         for (let outputKey in outputs) {
             let required = (primeInputN / primeInput) * outputs[outputKey] * scale;
@@ -613,6 +613,24 @@ function main() {
 
                 if ((isMultiAvailable || !Tech[block.key].Unlocked) && MainVariables.Money >= cost) {
                     Tech[block.key].Unlocked = true;
+                    for (let factoryN in UI.views.factoryView.factories) {
+                        let factory = UI.views.factoryView.factories[factoryN];
+                        let factoryUI = factory.ui;
+                        let factoryKey = factory.key;
+                        let crafting = Crafting[factoryKey];
+                        if (crafting.TechRequired.length > 0) {
+                            let visibility = "visible";
+                            for (let techRequiredN in crafting.TechRequired) {
+                                let techRequiredKey = crafting.TechRequired[techRequiredN];
+                                if (!Tech[techRequiredKey].Unlocked) {
+                                    visibility = "hidden";
+                                    break;
+                                }
+                            }
+
+                            factoryUI.head.css({visibility: visibility});
+                        }
+                    }
                     if (isMultiAvailable) {
                         Tech[block.key].MultiInfo.MultiLevel++;
                     }
@@ -650,6 +668,7 @@ function main() {
 
     // ***** Market View ***** //
 
+    let marketView = document.getElementById("marketView");
     let marketView_inner = document.getElementById("marketView_inner");
     let marketTypeBlocks = {};
     {
@@ -742,7 +761,7 @@ function main() {
                 if (!extractorInfo.ExtractorOwned && MainVariables.Money >= extractorInfo.ExtractorCost) {
                     let block = $(marketView_inner).find(`#${product.Type}`);
                     Products[p].ExtractorInfo.ExtractorOwned = true;
-                    $(marketView_inner).find("#market_empty").text("");
+                    $(marketView).find("#market_empty").text("");
                     if (!marketTypeBlocks[product.Type].Visible) {
                         marketTypeBlocks[product.Type].Visible = true;
                         block.css({visibility: "visible"});
@@ -790,6 +809,13 @@ function main() {
     // ***** Factories View ***** //
 
     {
+        let jFactoryView_upgrade = $(document.getElementById("factoryView_upgrade"));
+        let jFactoryView_upgradeInner = jFactoryView_upgrade.find("#factoryView_upgradeInner");
+
+        jFactoryView_upgradeInner.find("#factoryView_upgrade_exitButton").mouseup(() => {
+            jFactoryView_upgrade.css({visibility: "hidden"});
+        });
+
         let factoryView_inner = document.getElementById("factoryView_inner");
         let exampleFactory = document.getElementById("exampleFactory");
         factoryView_inner.removeChild(exampleFactory);
@@ -807,6 +833,8 @@ function main() {
             let jFactoryImport = jFactoryClone.find("#exampleFactory_input_import");
             let jFactoryImportButton = jFactoryClone.find("#exampleFactory_input_importButton");
             let jFactoryMain = jFactoryClone.find("#exampleFactory_main");
+            let jFactoryUpgrade = jFactoryClone.find("#exampleFactory_upgrade");
+            let jFactoryUpgradeButton = jFactoryClone.find("#exampleFactory_upgradeButton");
             let jFactoryOutput = jFactoryClone.find("#exampleFactory_output");
             let jFactoryOutputText = jFactoryClone.find("#exampleFactory_output_text");
 
@@ -818,11 +846,13 @@ function main() {
             jFactoryImport.attr("id", `${block.key}Factory_input_import`);
             jFactoryImportButton.attr("id", `${block.key}Factory_input_importButton`);
             jFactoryMain.attr("id", `${block.key}Factory_main`);
+            jFactoryUpgrade.attr("id", `${block.key}Factory_upgrade`);
+            jFactoryUpgradeButton.attr("id", `${block.key}Factory_upgradeButton`);
             jFactoryOutput.attr("id", `${block.key}Factory_output`);
             jFactoryOutputText.attr("id", `${block.key}Factory_output_text`);
             let factory = {ui: {
-                head: jFactoryClone, input: jFactoryInput, inputText: jFactoryInputText, importButton: jFactoryImportButton,
-                main: jFactoryMain, output: jFactoryOutput, outputText: jFactoryOutputText
+                head: jFactoryClone, buy: jFactoryBuy, buyButton: jFactoryBuyButton, input: jFactoryInput, inputText: jFactoryInputText,
+                importButton: jFactoryImportButton, main: jFactoryMain, output: jFactoryOutput, outputText: jFactoryOutputText
             }, key: block.key};
 
             let inputTextStr = null;
@@ -842,7 +872,8 @@ function main() {
             }
             jFactoryInputText.text(inputTextStr);
 
-            jFactoryBuyButton.text(`Buy Factory ($${crafting.FactoryInfo.FactoryCost})`);
+            jFactoryBuyButton.text(`Buy ${block.key} Factory for $${BeautifyNum(crafting.FactoryInfo.FactoryCost)}`);
+            if (crafting.TechRequired.length > 0) { jFactoryClone.css({visibility: "hidden"}); }
             jFactoryBuyButton.mouseup(() => {
                 if (!crafting.FactoryInfo.FactoryOwned && MainVariables.Money >= crafting.FactoryInfo.FactoryCost) {
                     crafting.FactoryInfo.FactoryOwned = true;
@@ -861,6 +892,7 @@ function main() {
                     jFactoryBuyButton.css({visibility: "hidden"});
                     jFactoryInput.css({visibility: "visible"});
                     jFactoryMain.css({visibility: "visible"});
+                    jFactoryUpgrade.css({visibility: "visible"});
                     jFactoryOutput.css({visibility: "visible"});
 
                     MainVariables.Money -= crafting.FactoryInfo.FactoryCost;
@@ -889,6 +921,10 @@ function main() {
 
                 UpdateFactories();
             });
+
+            jFactoryUpgradeButton.mouseup(() => {
+                jFactoryView_upgrade.css({visibility: "visible"});
+            })
 
 
             UI.views.factoryView.factories.push(factory);
@@ -1080,7 +1116,7 @@ function main() {
     // ***** Post Processing ***** //
 
     MakeDraggable(UI.views.techView.view, null, $(UI.views.techView.view).find("#techView_inner")[0]);
-    MakeDraggable(UI.views.marketView.view, null, $(UI.views.techView.view).find("#marketView_inner")[0]);
+    MakeDraggable(UI.views.marketView.view, null, $(UI.views.marketView.view).find("#marketView_inner")[0]);
     MakeDraggable(UI.views.extractorView.view, "x");
     MakeDraggable(UI.views.factoryView.view, null, $(UI.views.factoryView.view).find("#factoryView_inner")[0]);
 

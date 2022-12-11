@@ -207,20 +207,34 @@ body {
 
 /* Market View */
 
-#marketView_inner {
+#marketView {
+    cursor: grab;
     position: absolute;
     left: 0px;
-    top: 32px;
-    right: 0px;
-    bottom: 0px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    top: 0px;
+    width: 100000%;
+    height: 100000%;
+    background-color: #222;
+    overflow: hidden;
+}
+
+#marketView_inner {
+    left: 100px;
+    top: 100px;
+    right: 100px;
+    bottom: 100px;
+    width: 0.1%;
+    height: 0.1%;
+    pointer-events: none;
+    z-index: inherit;
 }
 
 #market_empty {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 0.05%;
+    top: 0.05%;
+    width: 0.08%;
+    height: 0.02%;
     transform: translate(-50%, -50%);
     color: #FFF;
     text-shadow: 0px 1px 4px #FFF;
@@ -278,7 +292,7 @@ body {
 .extractorSplit {
     float: left;
     position: relative;
-    background-image: url("./Images/The\ Perfect\ Scene\ Phase\ 0.png.png");
+    background-image: url("./Images/The\ Perfect\ Scene\ Phase\ 0.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -314,8 +328,8 @@ body {
 }
 
 #factoryView_inner {
-    width: 0.1%;
-    height: 0.1%;
+    width: max-content;
+    height: max-content;
     pointer-events: none;
     z-index: inherit;
 }
@@ -368,6 +382,31 @@ body {
     text-shadow: 0px 1px 4px #FFF;
     border-radius: 5px;
     color: #FFF;
+    z-index: +1;
+}
+
+#factoryView_upgrade {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #00000080;
+    pointer-events: none;
+    z-index: +10;
+}
+
+#factoryView_upgradeInner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50%;
+    height: 50%;
+    aspect-ratio: 1.5;
+    transform: translate(-50%, -50%);
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    border-radius: 5px;
     z-index: +1;
 }
 
@@ -438,7 +477,7 @@ body {
     right: 10px;
     bottom: 10px;
     height: 20px;
-    background-color: rgb(61, 192, 0);
+    background-color: hsl(101, 100%, 38%);
     filter: drop-shadow(0px 0px 2px #FFF);
 }
 
@@ -453,7 +492,35 @@ body {
     top: 1px;
     right: 1px;
     bottom: 3px;
-    background-color: rgb(44, 138, 0);
+    background-color: hsl(101, 100%, 27%);
+    user-select: none;
+    color: #FFF;
+    text-shadow: 0px 1px 4px #000;
+    pointer-events: all;
+}
+
+.exitButton_wrapper1 {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 36px;
+    height: 20px;
+    background-color: hsl(1, 100%, 38%);
+    filter: drop-shadow(0px 0px 2px hsl(1, 100%, 27%));
+}
+
+.exitButton1 {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    right: 1px;
+    bottom: 3px;
+    background-color: hsl(1, 100%, 27%);
     user-select: none;
     color: #FFF;
     text-shadow: 0px 1px 4px #000;
@@ -500,4 +567,19 @@ body {
     text-shadow: 0px 1px 4px #FFF;
     user-select: none;
     font-size: 28px;
+}
+
+/* Ads */
+
+#wrapper_ad {
+    position: absolute;
+    width: calc(5% + 120px);
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    background-color: #222;
+    box-shadow: 0px 0px 3px 2px #555 inset;
+    text-shadow: 0px 1px 4px #FFF;
+    color: #FFF;
+    z-index: 1000000;
 }

@@ -10,10 +10,13 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <script type="module" src="./Scripts/main.js"></script>
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7771915770246053"
+            crossorigin="anonymous"></script>
     </head>
 
     <body>
-        <div id="wrapper" class="onWeb" style="width: 100%; height: 100%;">
+        <div id="wrapper" class="onWeb" style="position: absolute; left: 0px; top: 0px; width: calc(95% - 120px); height: 100%;">
             <div id="topBar">
                 <div id="topBarInner">
                     <div id="topBar_mainView" class="topBar_button">The World</div>
@@ -48,9 +51,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="marketView" class="view_grayed">
-                    <div id="marketView_inner" class="view_inner">
-                        <div id="market_empty">Oops! Looks like the market is empty! Come back when you've bought your first extractor.</div>
+                <div id="marketView" class="view_inner">
+                    <div id="market_empty">Oops! Looks like the market is empty! Come back when you've bought your first extractor.</div>
+                    <div id="marketView_inner">
                         <div id="exampleMarketSplit" class="marketSplit">
                             <div id="exampleMarketSplit_type" class="text2">Type</div>
                             <div id="exampleMarketSplit_section" class="marketSplit_section">
@@ -98,10 +101,9 @@
                                     <div id="exampleFactory_input_importButton" class="buyButton1">Import 4.50 Iron : 1.50 Coal : 1.50 Metals = 6 Steel</div>
                                 </div>
                             </div>
-                            <div id="exampleFactory_main" class="factory_main" style="visibility: hidden;">
-                                <div id="exampleFactory_upgrade" class="buyButton_wrapper1" style="visibility: hidden;">
-                                    <div id="exampleFactory_upgradeButton" class="buyButton1">Upgrade</div>
-                                </div>
+                            <div id="exampleFactory_main" class="factory_main" style="visibility: hidden;"></div>
+                            <div id="exampleFactory_upgrade" class="buyButton_wrapper1" style="left: 25px; right: 25px; bottom: 70px; visibility: hidden;">
+                                <div id="exampleFactory_upgradeButton" class="buyButton1">Upgrade</div>
                             </div>
                             <div id="exampleFactory_output" class="factory_output" style="visibility: hidden;">
                                 <div id="exampleFactory_output_text">4.00/10.00 Steel</div>
@@ -132,7 +134,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="factoryView_upgrade" style="visibility: hidden;">
+                    <div id="factoryView_upgradeInner">
+                        <div id="factoryView_upgrade_exit" class="exitButton_wrapper1">
+                            <div id="factoryView_upgrade_exitButton" class="exitButton1">X</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div id="wrapper_ad" style="position: absolute; width: calc(5% + 120px); top: 0px; right: 0px; height: 100%;">
+            <div id="wrapper_ad_inner" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 90%; height: 95%;">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7771915770246053"
+                    crossorigin="anonymous"></script>
+                <!-- Factorie Right Ad -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-7771915770246053"
+                    data-ad-slot="6091432951"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+        <div id="wrapper_cookies">
+
         </div>
     </body>
 </html>

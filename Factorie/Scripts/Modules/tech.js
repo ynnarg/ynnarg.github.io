@@ -35,7 +35,7 @@ export let Tech = {
         Description: "Extract the clicks. What? You think these are unlimited? Your mouse has a lifetime, you know. Autoclicker? What's that?",
         Benefits: {ClickMul: 2},
         Precursors: ["Extractor"],
-        Cost: 750,
+        Cost: 250,
         MultiInfo: {
             Descriptions: [],
             Benefits: [{ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}, {ClickMul: 2}],
@@ -50,7 +50,7 @@ export let Tech = {
         Description: "Hot, humid, full of overworked factory workers, and useless managers.",
         Benefits: {},
         Precursors: ["Extractor"],
-        Cost: 250,
+        Cost: 50,
         Unlocked: false,
     },
 
@@ -58,7 +58,7 @@ export let Tech = {
         Description: "Anything that even barely has a metal in it involves this somehow. yep.",
         Benefits: {},
         Precursors: ["Factorie"],
-        Cost: 500,
+        Cost: 125,
         Unlocked: false,
     },
 
@@ -66,7 +66,7 @@ export let Tech = {
         Description: "Xe + anything else -> Xe + anything else.",
         Benefits: {},
         Precursors: ["Factorie"],
-        Cost: 500,
+        Cost: 350,
         Unlocked: false,
     },
 
@@ -74,7 +74,7 @@ export let Tech = {
         Description: "Mineralology. I can say what I want.",
         Benefits: {},
         Precursors: ["Factorie"],
-        Cost: 500,
+        Cost: 400,
         Unlocked: false,
     },
 
@@ -82,7 +82,7 @@ export let Tech = {
         Description: "Extra stuff. Probably not important.",
         Benefits: {},
         Precursors: ["Factorie"],
-        Cost: 100,
+        Cost: 50,
         Unlocked: false,
     },
 
@@ -90,7 +90,7 @@ export let Tech = {
         Description: "\"I said it, I said it, manual labour is the way! Automation will ruin our society!\" -- Don't believe them.",
         Benefits: {},
         Precursors: ["Factorie"],
-        Cost: 850,
+        Cost: 500,
         Unlocked: false,
     },
 
@@ -107,7 +107,7 @@ export let Tech = {
         Description: "Bet your autoclicker annoyed you for the first few minutes. Either that or you turned off the sound in which case you didn't get to enjoy the music :-)",
         Benefits: {},
         Precursors: ["Extras"],
-        Cost: 100,
+        Cost: 50,
         Unlocked: false,
     },
 
@@ -115,7 +115,7 @@ export let Tech = {
         Description: "Yay! Stats! So exciting.",
         Benefits: {},
         Precursors: ["Extras"],
-        Cost: 100,
+        Cost: 50,
         Unlocked: false,
     },
 
@@ -123,7 +123,7 @@ export let Tech = {
         Description: "'Poof, poof, poof', the wizard said as he programmed with his punch cards. '... Oops...', the wizard quietly exclaimed.",
         Benefits: {},
         Precursors: ["Automation"],
-        Cost: 1250,
+        Cost: 675,
         Unlocked: false
     },
 
@@ -132,7 +132,7 @@ export let Tech = {
         Description: "\"A monument of a bird whose eyes and beak were opened in flame.\"",
         Benefits: {},
         Precursors: ["Metallurgy"],
-        Cost: 1250,
+        Cost: 675,
         Unlocked: false,
     },
 
